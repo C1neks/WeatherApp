@@ -1,11 +1,8 @@
-import React from 'react';
-
-
+import React from "react";
+import Weather from "./Weather/Weather";
 
 function App() {
-  return (
-    <div>Main Page</div>
-  );
+  return <Weather />;
 }
 
 export default App;
