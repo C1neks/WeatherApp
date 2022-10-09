@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 const Weather = () => {
   const timeElapsed = Date.now();
@@ -6,7 +7,7 @@ const Weather = () => {
   const [forecast, setForecast] = useState<any>({ days: [] });
   const getWeatherForecast = async () => {
     const result = await fetch(
-      "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/bialystok?unitGroup=metric&include=days&key=AKX659CKNYKH48BPCZETG9YZ8&contentType=json"
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/bialystok?unitGroup=metric&include=days&key=${API_KEY}&contentType=json`
     );
     return result.json();
   };
