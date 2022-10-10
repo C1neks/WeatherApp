@@ -27,15 +27,27 @@ const Weather = () => {
 
       {forecast.days.map((x: any, i: number) => (
         <div>
-          <h3>Data {x.datetime}</h3>
-          <h4>Actual Temperature {x.temp}</h4>
-          <h4>Feels like {x.feelslike}</h4>
-          <h4>{x.conditions}</h4>
-          <h4>Max Temperature {x.tempmax}</h4>
-          <h4>Min Temperature {x.tempmin}</h4>
-          <p>{x.preciptype + ":" + x.precipprob}</p>
-          {i === 0 ? x.sunrise : x.pressure}
-          <p>Description: {x.description}</p>
+          {i === 0 ? (
+            <div>
+              <h3>Data {x.datetime}</h3>
+              <h4>Actual Temperature {x.temp}</h4>
+              <h4>Feels like {x.feelslike}</h4>
+              <h4>{x.icon}</h4>
+              <h4>Max Temperature {x.tempmax}</h4>
+              <h4>Min Temperature {x.tempmin}</h4>
+              <p>Sunrise: {x.sunrise}</p> <p>Sunset: {x.sunset}</p>{" "}
+              <p>humidity: {x.humidity}</p> <p>{x.windspeed + "km/h"}</p>{" "}
+              <p>Precipitation: {x.precipprob}</p> <p>Pressure: {x.pressure}</p>
+            </div>
+          ) : (
+            <div>
+              <h3>Data {x.datetime}</h3>
+              <h4>{x.icon}</h4>
+              <p>{x.precipprob}</p>
+              <h4>Max Temperature {x.tempmax}</h4>
+              <h4>Min Temperature {x.tempmin}</h4>
+            </div>
+          )}
         </div>
       ))}
     </>
