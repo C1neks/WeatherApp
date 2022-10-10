@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 const Weather = () => {
+  let { locationID } = useParams();
   const timeElapsed = Date.now();
   const today: any = new Date(timeElapsed);
 
@@ -17,7 +19,7 @@ const Weather = () => {
   const [forecast, setForecast] = useState<any>({ days: [] });
   const getWeatherForecast = async () => {
     const result = await fetch(
-      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/warsaw?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
+      `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationID}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
     );
     return result.json();
   };

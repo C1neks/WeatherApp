@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/forecast" element={<Weather />} />
+        <Route path="/forecast/:locationID" element={<Weather />} />
       </Routes>
     </div>
   );
