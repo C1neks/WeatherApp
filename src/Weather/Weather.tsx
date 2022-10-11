@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { RiCelsiusLine } from "react-icons/ri";
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 const Weather = () => {
