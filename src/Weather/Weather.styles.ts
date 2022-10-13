@@ -103,3 +103,14 @@ export const Sun = styled(FiSun)`
   border-radius: 20rem;
   padding: 3rem;
 `;
+
+export const MoreDetails = styled.div`
+  width: 100vw;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 1rem;
+`;
+export const Details = styled.p`
+  width: 50%;
+  margin: 0;
+`;

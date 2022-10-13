@@ -8,12 +8,14 @@ import {
   ActualTemp,
   Conditions,
   Degree,
+  Details,
   FeelsLike,
   ForecastLocation,
   HighestAndLowest,
   HourForecast,
   HourForecastWrapper,
   MainInfo,
+  MoreDetails,
   StyledHours,
   Sun,
   TodayForecastDetails,
@@ -119,10 +121,27 @@ const Weather = () => {
                       ) : null
                     )}
                   </HourForecastWrapper>
-                  <p>Sunrise: {x.sunrise}</p> <p>Sunset: {x.sunset}</p>{" "}
-                  <p>humidity: {x.humidity}</p> <p>{x.windspeed + "km/h"}</p>{" "}
-                  <p>Precipitation: {x.precipprob}</p>{" "}
-                  <p>Pressure: {x.pressure}</p>
+                  <MoreDetails>
+                    <Details>
+                      <p>Sunrise</p> <p>{x.sunrise}</p>
+                    </Details>
+                    <Details>
+                      <p>Sunset</p> <p>{x.sunset}</p>
+                    </Details>
+                    <Details>
+                      <p>Humidity</p> <p>{x.humidity}</p>
+                    </Details>
+                    <Details>
+                      <p>Wind</p>
+                      <p>{x.windspeed + "km/h"}</p>
+                    </Details>{" "}
+                    <Details>
+                      <p>Precipitation</p> <p>{x.precipprob + "%"}</p>
+                    </Details>{" "}
+                    <Details>
+                      <p>Pressure</p> <p>{x.pressure.toFixed(0) + " hPa"}</p>
+                    </Details>
+                  </MoreDetails>
                 </div>
               ) : null}
             </div>
