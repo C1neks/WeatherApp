@@ -2,15 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
-import { FiSun } from "react-icons/fi";
-import { WiDegrees } from "react-icons/wi";
+
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import {
   ActualTemp,
+  Conditions,
   Degree,
+  FeelsLike,
   ForecastLocation,
   HighestAndLowest,
+  HourForecast,
+  HourForecastWrapper,
   MainInfo,
+  StyledHours,
+  Sun,
   TodayForecastDetails,
   TopInfo,
   WeatherIcon,
@@ -35,7 +40,7 @@ const Weather = () => {
     todayDate.getSeconds();
   console.log(todayDate);
   console.log(time);
-  const [forecast, setForecast] = useState<any>({ days: [] });
+  const [forecast, setForecast] = useState<any>({ address: "", days: [] });
   const getWeatherForecast = async () => {
     const result = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationID}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
@@ -61,8 +66,10 @@ const Weather = () => {
 
       <MainInfo>
         <WeatherInfo>
-          {/*<div>{forecast.resolvedAddress}</div>*/}
-          <ForecastLocation>{forecast.address}</ForecastLocation>
+          <ForecastLocation>
+            {forecast.address.charAt(0).toUpperCase() +
+              forecast.address.slice(1)}
+          </ForecastLocation>
           {forecast.days.map((x: any, i: number) => (
             <div key={x.datetimeEpoch}>
               {i === 0 ? (
@@ -72,35 +79,46 @@ const Weather = () => {
                       value={{ color: "white", size: "80" }}
                     >
                       <ActualTemp>
-                        {x.temp}
-                        <span>
-                          <WiDegrees />
-                        </span>
+                        {x.temp.toFixed(0)}
+                        <span>&#176;</span>
                       </ActualTemp>
                     </IconContext.Provider>
                     <HighestAndLowest>
                       <h4>
-                        <BiChevronUp /> {x.tempmax}
+                        <BiChevronUp /> {x.tempmax.toFixed(0)}
                       </h4>
                       <h4>
                         <BiChevronDown />
-                        {x.tempmin}
+                        {x.tempmin.toFixed(0)}
                       </h4>
                     </HighestAndLowest>
 
-                    <h4>{x.conditions}</h4>
-                    <h4>Feels like {x.feelslike}</h4>
-                    <h4>{x.icon}</h4>
+                    <Conditions>{x.conditions}</Conditions>
+                    <FeelsLike>
+                      Feels like {x.feelslike.toFixed(0)} <span>&#176;</span>
+                    </FeelsLike>
+                    {/*<h4>{x.icon}</h4>*/}
                   </TodayForecastDetails>
-                  {x.hours.map((hour: any) => (
-                    <div key={hour.datetime}>
-                      <p>
-                        {hour.datetime >= time
-                          ? hour.datetime + " " + hour.temp
-                          : null}
-                      </p>
-                    </div>
-                  ))}
+                  <HourForecastWrapper>
+                    {x.hours.map((hour: any) =>
+                      hour.datetime >= time ? (
+                        <>
+                          {
+                            <HourForecast>
+                              <StyledHours>
+                                {hour.datetime.slice(0, 2)}
+                                <span>pm</span>
+                              </StyledHours>
+                              <span>
+                                {hour.temp.toFixed(0)}
+                                <span>&#176;</span>
+                              </span>
+                            </HourForecast>
+                          }
+                        </>
+                      ) : null
+                    )}
+                  </HourForecastWrapper>
                   <p>Sunrise: {x.sunrise}</p> <p>Sunset: {x.sunset}</p>{" "}
                   <p>humidity: {x.humidity}</p> <p>{x.windspeed + "km/h"}</p>{" "}
                   <p>Precipitation: {x.precipprob}</p>{" "}
@@ -110,50 +128,19 @@ const Weather = () => {
             </div>
           ))}
         </WeatherInfo>
-        <IconContext.Provider value={{ color: "white", size: "200" }}>
+        <IconContext.Provider
+          value={{
+            color: "white",
+            size: "200",
+          }}
+        >
           <WeatherIconWrapper>
             <WeatherIcon>
-              <FiSun />
+              <Sun />
             </WeatherIcon>
           </WeatherIconWrapper>
         </IconContext.Provider>
       </MainInfo>
-
-      {/*{forecast.days.map((x: any, i: number) => (*/}
-      {/*  <div key={x.datetimeEpoch}>*/}
-      {/*    {i === 0 ? (*/}
-      {/*      <div>*/}
-      {/*        <h3>Data {x.datetime}</h3>*/}
-      {/*        <h4>Actual Temperature {x.temp}</h4>*/}
-      {/*        <h4>Max Temperature {x.tempmax}</h4>*/}
-      {/*        <h4>Min Temperature {x.tempmin}</h4>*/}
-      {/*        <h4>{x.conditions}</h4>*/}
-      {/*        <h4>Feels like {x.feelslike}</h4>*/}
-      {/*        <h4>{x.icon}</h4>*/}
-      {/*        <p>Sunrise: {x.sunrise}</p> <p>Sunset: {x.sunset}</p>{" "}*/}
-      {/*        <p>humidity: {x.humidity}</p> <p>{x.windspeed + "km/h"}</p>{" "}*/}
-      {/*        <p>Precipitation: {x.precipprob}</p> <p>Pressure: {x.pressure}</p>*/}
-      {/*        {x.hours.map((hour: any) => (*/}
-      {/*          <div key={hour.datetime}>*/}
-      {/*            <p>*/}
-      {/*              {hour.datetime >= time*/}
-      {/*                ? hour.datetime + " " + hour.temp*/}
-      {/*                : null}*/}
-      {/*            </p>*/}
-      {/*          </div>*/}
-      {/*        ))}*/}
-      {/*      </div>*/}
-      {/*    ) : (*/}
-      {/*      <div>*/}
-      {/*        <h3>Data {x.datetime}</h3>*/}
-      {/*        <h4>{x.icon}</h4>*/}
-      {/*        <p>{x.precipprob}</p>*/}
-      {/*        <h4>Max Temperature {x.tempmax}</h4>*/}
-      {/*        <h4>Min Temperature {x.tempmin}</h4>*/}
-      {/*      </div>*/}
-      {/*    )}*/}
-      {/*  </div>*/}
-      {/*))}*/}
     </Wrapper>
   );
 };
