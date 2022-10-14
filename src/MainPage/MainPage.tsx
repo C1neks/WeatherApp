@@ -6,9 +6,11 @@ const initialFormState = {
 };
 
 const MainPage = () => {
-  const [formValues, setFormValues] = useState<any>(initialFormState);
+  const [formValues, setFormValues] = useState(initialFormState);
 
-  const handleInputChange = (e: { target: { name: any; value: any } }) => {
+  const handleInputChange = (e: {
+    target: { name: string; value: string };
+  }) => {
     setFormValues({
       ...formValues,
       [e.target.name]: e.target.value,
