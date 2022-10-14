@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FiSun } from "react-icons/fi";
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 export const Wrapper = styled.div`
   background: rgb(236, 177, 35);
   background: linear-gradient(
@@ -67,10 +68,12 @@ export const HighestAndLowest = styled.div`
 
 export const Conditions = styled.p`
   margin-top: 3rem;
+  font-weight: 500;
 `;
 
 export const FeelsLike = styled.p`
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
 `;
 
 export const HourForecastWrapper = styled.div`
@@ -137,7 +140,7 @@ export const LaterForecast = styled.div`
 `;
 
 export const MaxMinForecast = styled.div`
-  width: 33%;
+  width: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -154,7 +157,7 @@ export const MinSpan = styled.span`
 
 export const WeekDayWrapper = styled.span`
   width: 33%;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 export const WeekDay = styled.div`
   font-weight: 500;
@@ -168,4 +171,12 @@ export const Precip = styled.span`
 
 export const WeatherForecastIcon = styled.div`
   opacity: 0.8;
+`;
+
+export const ChevronDown = styled(BiChevronDown)`
+  opacity: 0.5;
+`;
+
+export const ChevronUp = styled(BiChevronUp)`
+  opacity: 0.5;
 `;

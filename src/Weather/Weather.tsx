@@ -4,9 +4,11 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
 
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+// import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import {
   ActualTemp,
+  ChevronDown,
+  ChevronUp,
   Conditions,
   DetailName,
   Details,
@@ -103,11 +105,11 @@ const Weather: React.FC = () => {
                     </IconContext.Provider>
                     <HighestAndLowest>
                       <span>
-                        <BiChevronUp /> {day.tempmax.toFixed(0)}
+                        <ChevronUp /> {day.tempmax.toFixed(0)}
                         <span>&#176;</span>
                       </span>
                       <span>
-                        <BiChevronDown />
+                        <ChevronDown />
                         {day.tempmin.toFixed(0)}
                         <span>&#176;</span>
                       </span>
