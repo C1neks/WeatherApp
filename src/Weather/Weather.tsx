@@ -20,45 +20,31 @@ import {
   MainInfo,
   MaxMinForecast,
   MaxMinSpan,
+  MinSpan,
   MoreDetails,
+  Precip,
   StyledDegree,
   StyledHours,
   Sun,
   TodayForecastDetails,
   TopInfo,
+  WeatherForecastIcon,
   WeatherIcon,
   WeatherIconWrapper,
   WeatherInfo,
   WeekDay,
+  WeekDayWrapper,
   Wrapper,
 } from "./Weather.styles";
 import { IconContext } from "react-icons";
+import { DayType, ForecastType, Hour } from "../models";
+import getWeekDay from "./getWeekDay";
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-const Weather = () => {
-  const getWeekDay = (epoch: any) => {
-    const result =
-      Math.floor((epoch / (24 * 3600)) % 7) === 0 ? (
-        <div>Thursday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 1 ? (
-        <div>Friday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 2 ? (
-        <div>Saturday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 3 ? (
-        <div>Sunday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 4 ? (
-        <div>Monday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 5 ? (
-        <div>Tuesday</div>
-      ) : Math.floor((epoch / (24 * 3600)) % 7) === 6 ? (
-        <div>Wednesday</div>
-      ) : null;
-
-    return result;
-  };
+const Weather: React.FC = () => {
   let { locationID } = useParams();
   const timeElapsed = Date.now();
-  const today: any = new Date(timeElapsed);
+  const today = new Date(timeElapsed);
 
   const todayDate = new Date();
   const time =
@@ -69,7 +55,10 @@ const Weather = () => {
     todayDate.getSeconds();
   console.log(todayDate);
   console.log(time);
-  const [forecast, setForecast] = useState<any>({ address: "", days: [] });
+  const [forecast, setForecast] = useState<ForecastType>({
+    address: "",
+    days: [],
+  });
   const getWeatherForecast = async () => {
     const result = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationID}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
@@ -99,8 +88,8 @@ const Weather = () => {
             {forecast.address.charAt(0).toUpperCase() +
               forecast.address.slice(1)}
           </ForecastLocation>
-          {forecast.days.map((x: any, i: number) => (
-            <div key={x.datetimeEpoch}>
+          {forecast.days.map((day: DayType, i: number) => (
+            <div key={day.datetimeEpoch}>
               {i === 0 ? (
                 <div>
                   <TodayForecastDetails>
@@ -108,28 +97,30 @@ const Weather = () => {
                       value={{ color: "white", size: "80" }}
                     >
                       <ActualTemp>
-                        {x.temp.toFixed(0)}
+                        {day.temp.toFixed(0)}
                         <span>&#176;</span>
                       </ActualTemp>
                     </IconContext.Provider>
                     <HighestAndLowest>
-                      <h4>
-                        <BiChevronUp /> {x.tempmax.toFixed(0)}
-                      </h4>
-                      <h4>
+                      <span>
+                        <BiChevronUp /> {day.tempmax.toFixed(0)}
+                        <span>&#176;</span>
+                      </span>
+                      <span>
                         <BiChevronDown />
-                        {x.tempmin.toFixed(0)}
-                      </h4>
+                        {day.tempmin.toFixed(0)}
+                        <span>&#176;</span>
+                      </span>
                     </HighestAndLowest>
 
-                    <Conditions>{x.conditions}</Conditions>
+                    <Conditions>{day.conditions}</Conditions>
                     <FeelsLike>
-                      Feels like {x.feelslike.toFixed(0)} <span>&#176;</span>
+                      Feels like {day.feelslike.toFixed(0)} <span>&#176;</span>
                     </FeelsLike>
                     {/*<h4>{x.icon}</h4>*/}
                   </TodayForecastDetails>
                   <HourForecastWrapper>
-                    {x.hours.map((hour: any) =>
+                    {day.hours.map((hour: Hour, i: number) =>
                       hour.datetime >= time ? (
                         <>
                           {
@@ -151,52 +142,66 @@ const Weather = () => {
                   <MoreDetails>
                     <Details>
                       <DetailName>Sunrise</DetailName>{" "}
-                      <DetailValue>{x.sunrise}</DetailValue>
+                      <DetailValue>{day.sunrise.slice(0, 5)}</DetailValue>
                     </Details>
                     <Details>
                       <DetailName>Sunset</DetailName>{" "}
-                      <DetailValue>{x.sunset}</DetailValue>
+                      <DetailValue>{day.sunset.slice(0, 5)}</DetailValue>
                     </Details>
                     <Details>
                       <DetailName>Humidity</DetailName>{" "}
-                      <DetailValue>{x.humidity}</DetailValue>
+                      <DetailValue>{day.humidity.toFixed(0) + "%"}</DetailValue>
                     </Details>
                     <Details>
                       <DetailName>Wind</DetailName>
-                      <DetailValue>{x.windspeed + "km/h"}</DetailValue>
+                      <DetailValue>
+                        {day.windspeed.toFixed(0) + "km/h"}
+                      </DetailValue>
                     </Details>{" "}
                     <Details>
                       <DetailName>Precipitation</DetailName>{" "}
-                      <DetailValue>{x.precipprob + "%"}</DetailValue>
+                      <DetailValue>
+                        {day.precipprob.toFixed(0) + "%"}
+                      </DetailValue>
                     </Details>{" "}
                     <Details>
                       <DetailName>Pressure</DetailName>{" "}
                       <DetailValue>
-                        {x.pressure.toFixed(0) + " hPa"}
+                        {day.pressure.toFixed(0) + " hPa"}
                       </DetailValue>
                     </Details>
                   </MoreDetails>
                 </div>
               ) : i > 0 && i <= 6 ? (
                 <LaterForecast>
-                  <WeekDay>{getWeekDay(x.datetimeEpoch)}</WeekDay>
-                  {x.icon === "rain" ? (
-                    <div style={{ width: "33%" }}>
-                      <WiRain />
-                    </div>
-                  ) : x.icon === "partly-cloudy-day" ? (
-                    <div>
-                      <WiCloud />
-                    </div>
-                  ) : (
-                    <div>
-                      <WiDaySunny />
-                    </div>
-                  )}
-                  <MaxMinForecast>
-                    <MaxMinSpan>{x.tempmax.toFixed(0)}</MaxMinSpan>
-                    <MaxMinSpan>{x.tempmin.toFixed(0)}</MaxMinSpan>
-                  </MaxMinForecast>
+                  <WeekDayWrapper>
+                    {getWeekDay(day.datetimeEpoch)}
+                  </WeekDayWrapper>
+                  <IconContext.Provider
+                    value={{
+                      color: "white",
+                      size: "25",
+                    }}
+                  >
+                    {day.icon === "rain" ? (
+                      <WeatherForecastIcon>
+                        <WiRain />
+                      </WeatherForecastIcon>
+                    ) : day.icon === "partly-cloudy-day" ? (
+                      <WeatherForecastIcon>
+                        <WiCloud />
+                      </WeatherForecastIcon>
+                    ) : (
+                      <WeatherForecastIcon>
+                        <WiDaySunny />
+                      </WeatherForecastIcon>
+                    )}
+                    <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
+                    <MaxMinForecast>
+                      <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
+                      <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
+                    </MaxMinForecast>
+                  </IconContext.Provider>
                 </LaterForecast>
               ) : null}
             </div>

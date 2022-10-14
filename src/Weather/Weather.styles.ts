@@ -56,38 +56,37 @@ export const TodayForecastDetails = styled.div`
 
 export const ActualTemp = styled.p`
   font-size: 5rem;
-  font-weight: 500;
+  font-weight: 400;
   margin: 0;
 `;
 export const HighestAndLowest = styled.div`
   display: flex;
   font-size: 1rem;
+  font-weight: 400;
 `;
 
-export const Degree = styled.span`
-  font-size: 0.5rem;
-  margin-bottom: 10rem;
+export const Conditions = styled.p`
+  margin-top: 3rem;
 `;
-export const Conditions = styled.p``;
 
 export const FeelsLike = styled.p`
-  font-size: 0.6rem;
+  font-size: 0.8rem;
 `;
 
 export const HourForecastWrapper = styled.div`
   display: flex;
   width: 100vw;
-  border-top: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
+  border-top: 1px solid #d3d3d38c;
+  border-bottom: 1px solid #d3d3d38c;
   justify-content: space-between;
   align-items: center;
-  margin-top: 3rem;
+  margin-top: 3.5rem;
   margin-bottom: 1rem;
 `;
 
 export const HourForecast = styled.div`
   display: flex;
-  padding: 1rem;
+  padding: 1.2rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -96,7 +95,7 @@ export const HourForecast = styled.div`
 
 export const StyledHours = styled.span`
   font-size: 0.6rem;
-  font-weight: lighter;
+
   opacity: 0.7;
 `;
 
@@ -117,16 +116,17 @@ export const Details = styled.p`
   margin: 0;
 `;
 export const StyledDegree = styled.span`
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   padding: 1rem 1rem 0rem 1rem;
+  font-weight: 500;
 `;
 
 export const DetailName = styled.p`
-  opacity: 0.9;
+  opacity: 0.6;
 `;
 
 export const DetailValue = styled.p`
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 export const LaterForecast = styled.div`
@@ -147,7 +147,25 @@ export const MaxMinSpan = styled.span`
   padding: 0.5rem;
 `;
 
-export const WeekDay = styled.span`
+export const MinSpan = styled.span`
+  padding: 0.5rem;
+  opacity: 0.6;
+`;
+
+export const WeekDayWrapper = styled.span`
   width: 33%;
   margin-left: 1rem;
+`;
+export const WeekDay = styled.div`
+  font-weight: 500;
+  letter-spacing: 1px;
+`;
+
+export const Precip = styled.span`
+  font-size: 0.8rem;
+  opacity: 0.7;
+`;
+
+export const WeatherForecastIcon = styled.div`
+  opacity: 0.8;
 `;
