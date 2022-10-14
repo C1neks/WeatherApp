@@ -12,6 +12,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  color: white;
 `;
 
 export const TopInfo = styled.div`
@@ -96,6 +97,7 @@ export const HourForecast = styled.div`
 export const StyledHours = styled.span`
   font-size: 0.6rem;
   font-weight: lighter;
+  opacity: 0.7;
 `;
 
 export const Sun = styled(FiSun)`
@@ -113,4 +115,39 @@ export const MoreDetails = styled.div`
 export const Details = styled.p`
   width: 50%;
   margin: 0;
+`;
+export const StyledDegree = styled.span`
+  font-size: 1.5rem;
+  padding: 1rem 1rem 0rem 1rem;
+`;
+
+export const DetailName = styled.p`
+  opacity: 0.9;
+`;
+
+export const DetailValue = styled.p`
+  font-weight: bold;
+`;
+
+export const LaterForecast = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+`;
+
+export const MaxMinForecast = styled.div`
+  width: 33%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MaxMinSpan = styled.span`
+  padding: 0.5rem;
+`;
+
+export const WeekDay = styled.span`
+  width: 33%;
+  margin-left: 1rem;
 `;
