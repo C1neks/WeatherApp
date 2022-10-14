@@ -13,13 +13,12 @@ const MainPage = () => {
       ...formValues,
       [e.target.name]: e.target.value,
     });
-    console.log(formValues);
   };
   return (
     <>
       <div>MAIN PAGE!</div>
       <div>
-        <label htmlFor="location"></label>
+        <label htmlFor="location" />
         <input
           type="text"
           id="location"
