@@ -34,7 +34,6 @@ import {
   WeatherIcon,
   WeatherIconWrapper,
   WeatherInfo,
-  WeekDay,
   WeekDayWrapper,
   Wrapper,
 } from "./Weather.styles";
@@ -55,8 +54,7 @@ const Weather: React.FC = () => {
     todayDate.getMinutes() +
     ":" +
     todayDate.getSeconds();
-  console.log(todayDate);
-  console.log(time);
+
   const [forecast, setForecast] = useState<ForecastType>({
     address: "",
     days: [],
@@ -75,6 +73,37 @@ const Weather: React.FC = () => {
       setForecast(result);
     })();
   }, []);
+
+  const forecastDetails = forecast.days.map((day: DayType, i: number) =>
+    i === 0 ? (
+      <MoreDetails>
+        <Details>
+          <DetailName>Sunrise</DetailName>{" "}
+          <DetailValue>{day.sunrise.slice(0, 5)}</DetailValue>
+        </Details>
+        <Details>
+          <DetailName>Sunset</DetailName>{" "}
+          <DetailValue>{day.sunset.slice(0, 5)}</DetailValue>
+        </Details>
+        <Details>
+          <DetailName>Humidity</DetailName>{" "}
+          <DetailValue>{day.humidity.toFixed(0) + "%"}</DetailValue>
+        </Details>
+        <Details>
+          <DetailName>Wind</DetailName>
+          <DetailValue>{day.windspeed.toFixed(0) + "km/h"}</DetailValue>
+        </Details>{" "}
+        <Details>
+          <DetailName>Precipitation</DetailName>{" "}
+          <DetailValue>{day.precipprob.toFixed(0) + "%"}</DetailValue>
+        </Details>{" "}
+        <Details>
+          <DetailName>Pressure</DetailName>{" "}
+          <DetailValue>{day.pressure.toFixed(0) + " hPa"}</DetailValue>
+        </Details>
+      </MoreDetails>
+    ) : null
+  );
 
   return (
     <Wrapper>
@@ -141,38 +170,6 @@ const Weather: React.FC = () => {
                       ) : null
                     )}
                   </HourForecastWrapper>
-                  <MoreDetails>
-                    <Details>
-                      <DetailName>Sunrise</DetailName>{" "}
-                      <DetailValue>{day.sunrise.slice(0, 5)}</DetailValue>
-                    </Details>
-                    <Details>
-                      <DetailName>Sunset</DetailName>{" "}
-                      <DetailValue>{day.sunset.slice(0, 5)}</DetailValue>
-                    </Details>
-                    <Details>
-                      <DetailName>Humidity</DetailName>{" "}
-                      <DetailValue>{day.humidity.toFixed(0) + "%"}</DetailValue>
-                    </Details>
-                    <Details>
-                      <DetailName>Wind</DetailName>
-                      <DetailValue>
-                        {day.windspeed.toFixed(0) + "km/h"}
-                      </DetailValue>
-                    </Details>{" "}
-                    <Details>
-                      <DetailName>Precipitation</DetailName>{" "}
-                      <DetailValue>
-                        {day.precipprob.toFixed(0) + "%"}
-                      </DetailValue>
-                    </Details>{" "}
-                    <Details>
-                      <DetailName>Pressure</DetailName>{" "}
-                      <DetailValue>
-                        {day.pressure.toFixed(0) + " hPa"}
-                      </DetailValue>
-                    </Details>
-                  </MoreDetails>
                 </div>
               ) : i > 0 && i <= 6 ? (
                 <LaterForecast>
@@ -208,6 +205,7 @@ const Weather: React.FC = () => {
               ) : null}
             </div>
           ))}
+          {forecastDetails}
         </WeatherInfo>
         <IconContext.Provider
           value={{

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { MainPageWrapper } from "./MainPage.styles";
 
 const initialFormState = {
   location: "",
@@ -17,7 +18,7 @@ const MainPage = () => {
     });
   };
   return (
-    <>
+    <MainPageWrapper>
       <div>MAIN PAGE!</div>
       <div>
         <label htmlFor="location" />
@@ -35,7 +36,7 @@ const MainPage = () => {
       <Link to={"/forecast/" + `${formValues.location}`}>
         <button>Check Weather</button>
       </Link>
-    </>
+    </MainPageWrapper>
   );
 };
 

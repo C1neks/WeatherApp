@@ -47,12 +47,12 @@ export const WeatherIcon = styled.span`
 export const ForecastLocation = styled.p`
   color: white;
   font-size: 1.3rem;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 
 export const TodayForecastDetails = styled.div`
   color: white;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 
 export const ActualTemp = styled.p`
@@ -109,10 +109,19 @@ export const Sun = styled(FiSun)`
 `;
 
 export const MoreDetails = styled.div`
+  background: rgb(236, 177, 35);
+  background: linear-gradient(
+    180deg,
+    rgba(236, 177, 35, 1) 30%,
+    rgba(236, 121, 4, 1) 100%
+  );
   width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  margin-left: 1rem;
+  padding-left: 2rem;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
 `;
 export const Details = styled.p`
   width: 50%;
