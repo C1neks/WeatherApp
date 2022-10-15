@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { MainPageWrapper } from "./MainPage.styles";
+import {
+  AppDesc,
+  AppName,
+  Button,
+  Input,
+  InputButtonWrapper,
+  MainPageWrapper,
+} from "./MainPage.styles";
 
 const initialFormState = {
   location: "",
@@ -19,23 +26,26 @@ const MainPage = () => {
   };
   return (
     <MainPageWrapper>
-      <div>MAIN PAGE!</div>
-      <div>
-        <label htmlFor="location" />
-        <input
-          type="text"
-          id="location"
-          name="location"
-          placeholder="Check weather..."
-          value={formValues.location}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
+      <AppName>Weather App</AppName>
+      <AppDesc>Enter location for weather forecast </AppDesc>
+      <InputButtonWrapper>
+        <div>
+          <label htmlFor="location" />
+          <Input
+            type="text"
+            id="location"
+            name="location"
+            placeholder="Enter location"
+            value={formValues.location}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
 
-      <Link to={"/forecast/" + `${formValues.location}`}>
-        <button>Check Weather</button>
-      </Link>
+        <Link to={"/forecast/" + `${formValues.location}`}>
+          <Button>Check Weather</Button>
+        </Link>
+      </InputButtonWrapper>
     </MainPageWrapper>
   );
 };
