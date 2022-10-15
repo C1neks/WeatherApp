@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { FiSun } from "react-icons/fi";
+import { BsCloudRainHeavy } from "react-icons/bs";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 export const Wrapper = styled.div`
   background: rgb(236, 177, 35);
@@ -7,6 +8,21 @@ export const Wrapper = styled.div`
     180deg,
     rgba(236, 177, 35, 1) 30%,
     rgba(236, 121, 4, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperRain = styled.div`
+  background: rgb(70, 129, 201);
+  background: linear-gradient(
+    180deg,
+    rgba(70, 129, 201, 1) 30%,
+    rgba(47, 81, 165, 1) 100%
   );
   display: flex;
   flex-direction: column;
@@ -103,6 +119,12 @@ export const StyledHours = styled.span`
 `;
 
 export const Sun = styled(FiSun)`
+  background: #ebb95a;
+  border-radius: 20rem;
+  padding: 3rem;
+`;
+
+export const Rain = styled(BsCloudRainHeavy)`
   background: #ebb95a;
   border-radius: 20rem;
   padding: 3rem;

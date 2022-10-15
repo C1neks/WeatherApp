@@ -25,6 +25,7 @@ import {
   MinSpan,
   MoreDetails,
   Precip,
+  Rain,
   StyledDegree,
   StyledHours,
   Sun,
@@ -36,6 +37,7 @@ import {
   WeatherInfo,
   WeekDayWrapper,
   Wrapper,
+  WrapperRain,
 } from "./Weather.styles";
 import { IconContext } from "react-icons";
 import { DayType, ForecastType, Hour } from "../models";
@@ -59,6 +61,22 @@ const Weather: React.FC = () => {
     address: "",
     days: [],
   });
+  const [background, setBackground] = useState<DayType>({
+    conditions: "",
+    datetimeEpoch: 0,
+    feelslike: 0,
+    hours: [],
+    humidity: 0,
+    precipprob: 0,
+    pressure: 0,
+    sunrise: "",
+    sunset: "",
+    temp: 0,
+    tempmax: 0,
+    tempmin: 0,
+    windspeed: 0,
+    icon: "",
+  });
   const getWeatherForecast = async () => {
     const result = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationID}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
@@ -71,8 +89,15 @@ const Weather: React.FC = () => {
       const result = await getWeatherForecast();
 
       setForecast(result);
+      setBackground(result.days[0]);
     })();
   }, []);
+
+  const wrapper = background.icon.includes("rain") ? "WrapperRain" : "Wrapper";
+
+  // @ts-ignore
+  const ConditionalWrapper = ({ condition, wrapper, children }) =>
+    condition ? wrapper(children) : children;
 
   const forecastDetails = forecast.days.map((day: DayType, i: number) =>
     i === 0 ? (
@@ -106,7 +131,26 @@ const Weather: React.FC = () => {
   );
 
   return (
-    <Wrapper>
+    <ConditionalWrapper
+      condition={background.icon}
+      wrapper={(
+        children:
+          | string
+          | number
+          | boolean
+          | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+          | React.ReactFragment
+          | React.ReactPortal
+          | null
+          | undefined
+      ) =>
+        background.icon.includes("rain") ? (
+          <WrapperRain>{children}</WrapperRain>
+        ) : (
+          <Wrapper>{children}</Wrapper>
+        )
+      }
+    >
       <TopInfo>
         <GiHamburgerMenu />
         <div>{today.toDateString()}</div>
@@ -215,12 +259,12 @@ const Weather: React.FC = () => {
         >
           <WeatherIconWrapper>
             <WeatherIcon>
-              <Sun />
+              {background.icon.includes("rain") ? <Rain /> : <Sun />}
             </WeatherIcon>
           </WeatherIconWrapper>
         </IconContext.Provider>
       </MainInfo>
-    </Wrapper>
+    </ConditionalWrapper>
   );
 };
 
