@@ -45,10 +45,12 @@ import { IconContext } from "react-icons";
 import { DayType, ForecastType, Hour } from "../models";
 import getWeekDay from "./getWeekDay";
 const API_KEY = process.env.REACT_APP_API_KEY;
+const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
 
 const Weather: React.FC = () => {
   let { locationID } = useParams();
   const timeElapsed = Date.now();
+
   const today = new Date(timeElapsed);
 
   const todayDate = new Date();
@@ -58,7 +60,7 @@ const Weather: React.FC = () => {
     todayDate.getMinutes() +
     ":" +
     todayDate.getSeconds();
-
+  const [deviceLocation, setDeviceLocation] = useState({});
   const [forecast, setForecast] = useState<ForecastType>({
     address: "",
     days: [],
@@ -86,8 +88,21 @@ const Weather: React.FC = () => {
     return result.json();
   };
 
+  const getDeviceLocation = async () => {
+    navigator.geolocation.getCurrentPosition(async function (position) {
+      // console.log("Latitude is :", position.coords.latitude);
+      // console.log("Longitude is :", position.coords.longitude);
+      const result = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
+      );
+
+      console.log(result.json());
+    });
+  };
+
   useEffect(() => {
     (async () => {
+      await getDeviceLocation();
       const result = await getWeatherForecast();
 
       setForecast(result);
