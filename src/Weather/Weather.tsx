@@ -9,6 +9,7 @@ import {
   ActualTemp,
   ChevronDown,
   ChevronUp,
+  Cloud,
   Conditions,
   DetailName,
   Details,
@@ -37,6 +38,7 @@ import {
   WeatherInfo,
   WeekDayWrapper,
   Wrapper,
+  WrapperCloud,
   WrapperRain,
 } from "./Weather.styles";
 import { IconContext } from "react-icons";
@@ -101,7 +103,7 @@ const Weather: React.FC = () => {
 
   const forecastDetails = forecast.days.map((day: DayType, i: number) =>
     i === 0 ? (
-      <MoreDetails>
+      <MoreDetails day={day.icon}>
         <Details>
           <DetailName>Sunrise</DetailName>{" "}
           <DetailValue>{day.sunrise.slice(0, 5)}</DetailValue>
@@ -146,8 +148,10 @@ const Weather: React.FC = () => {
       ) =>
         background.icon.includes("rain") ? (
           <WrapperRain>{children}</WrapperRain>
-        ) : (
+        ) : background.icon.includes("sunny") ? (
           <Wrapper>{children}</Wrapper>
+        ) : (
+          <WrapperCloud>{children}</WrapperCloud>
         )
       }
     >
@@ -259,7 +263,13 @@ const Weather: React.FC = () => {
         >
           <WeatherIconWrapper>
             <WeatherIcon>
-              {background.icon.includes("rain") ? <Rain /> : <Sun />}
+              {background.icon.includes("rain") ? (
+                <Rain />
+              ) : background.icon.includes("sunny") ? (
+                <Sun />
+              ) : (
+                <Cloud />
+              )}
             </WeatherIcon>
           </WeatherIconWrapper>
         </IconContext.Provider>

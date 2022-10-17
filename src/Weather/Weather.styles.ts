@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import { FiSun } from "react-icons/fi";
 import { BsCloudRainHeavy } from "react-icons/bs";
+import { WiCloud } from "react-icons/wi";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+
+type Props = {
+  day: string;
+};
+
 export const Wrapper = styled.div`
   background: rgb(236, 177, 35);
   background: linear-gradient(
@@ -23,6 +29,21 @@ export const WrapperRain = styled.div`
     180deg,
     rgba(70, 129, 201, 1) 30%,
     rgba(47, 81, 165, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperCloud = styled.div`
+  background: rgb(179, 195, 210);
+  background: linear-gradient(
+    180deg,
+    rgba(179, 195, 210, 1) 30%,
+    rgba(79, 86, 116, 1) 100%
   );
   display: flex;
   flex-direction: column;
@@ -125,18 +146,25 @@ export const Sun = styled(FiSun)`
 `;
 
 export const Rain = styled(BsCloudRainHeavy)`
-  background: #ebb95a;
+  background: lightblue;
   border-radius: 20rem;
   padding: 3rem;
 `;
 
-export const MoreDetails = styled.div`
-  background: rgb(236, 177, 35);
-  background: linear-gradient(
-    180deg,
-    rgba(236, 177, 35, 1) 30%,
-    rgba(236, 121, 4, 1) 100%
-  );
+export const Cloud = styled(WiCloud)`
+  background: lightgray;
+  border-radius: 20rem;
+  padding: 3rem;
+`;
+
+export const MoreDetails = styled.div<Props>`
+  background: ${(props) =>
+    props.day === "rain"
+      ? "linear-gradient(\n    180deg,\n    rgba(70, 129, 201, 1) 30%,\n    rgba(47, 81, 165, 1) 100%\n  );"
+      : props.day === "sunny"
+      ? "linear-gradient(\n    180deg,\n    rgba(236, 177, 35, 1) 30%,\n    rgba(236, 121, 4, 1) 100%\n  )"
+      : "linear-gradient(\n    180deg,\n    rgba(179, 195, 210, 1) 30%,\n    rgba(79, 86, 116, 1) 100%\n  )"};
+
   width: 100vw;
   display: flex;
   flex-wrap: wrap;
