@@ -60,7 +60,7 @@ const Weather: React.FC = () => {
     todayDate.getMinutes() +
     ":" +
     todayDate.getSeconds();
-  const [deviceLocation, setDeviceLocation] = useState({});
+
   const [forecast, setForecast] = useState<ForecastType>({
     address: "",
     days: [],
@@ -81,6 +81,7 @@ const Weather: React.FC = () => {
     windspeed: 0,
     icon: "",
   });
+
   const getWeatherForecast = async () => {
     const result = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationID}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
@@ -88,29 +89,14 @@ const Weather: React.FC = () => {
     return result.json();
   };
 
-  const getDeviceLocation = async () => {
-    navigator.geolocation.getCurrentPosition(async function (position) {
-      // console.log("Latitude is :", position.coords.latitude);
-      // console.log("Longitude is :", position.coords.longitude);
-      const result = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
-      );
-
-      console.log(result.json());
-    });
-  };
-
   useEffect(() => {
     (async () => {
-      await getDeviceLocation();
       const result = await getWeatherForecast();
 
       setForecast(result);
       setBackground(result.days[0]);
     })();
   }, []);
-
-  const wrapper = background.icon.includes("rain") ? "WrapperRain" : "Wrapper";
 
   // @ts-ignore
   const ConditionalWrapper = ({ condition, wrapper, children }) =>
