@@ -1,5 +1,10 @@
 import styled from "styled-components";
 import ImgBg from "../backgroundmain.jpg";
+
+type Props = {
+  deviceLocation: string;
+};
+
 export const MainPageWrapper = styled.div`
   background-image: url(${ImgBg});
 
@@ -59,3 +64,5 @@ export const Button = styled.button`
     transition: 0.5s;
   }
 `;
+
+export const InputButton = styled.div<Props>``;

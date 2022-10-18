@@ -5,9 +5,11 @@ import {
   AppName,
   Button,
   Input,
+  InputButton,
   InputButtonWrapper,
   MainPageWrapper,
 } from "./MainPage.styles";
+import Modal from "../Modal";
 
 const initialFormState = {
   location: "",
@@ -15,6 +17,7 @@ const initialFormState = {
 const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
 
 const MainPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [deviceLocation, setDeviceLocation] = useState<string>("");
   const [formValues, setFormValues] = useState(initialFormState);
 
@@ -51,30 +54,52 @@ const MainPage = () => {
   return (
     <MainPageWrapper>
       <AppName>Weather App</AppName>
-      <AppDesc>Enter location for weather forecast </AppDesc>
-      <InputButtonWrapper>
-        <div>
-          <label htmlFor="location" />
-          <Input
-            type="text"
-            id="location"
-            name="location"
-            placeholder="Enter location"
-            value={formValues.location}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+      <AppDesc>
         {deviceLocation === "" ? (
-          <Link to={"/forecast/" + `${formValues.location}`}>
-            <Button>Check Weather</Button>
-          </Link>
+          <>
+            <AppDesc>We cannot get your location!</AppDesc>
+            <div>
+              <button onClick={() => setIsOpen(true)}>Search</button>
+              <Modal
+                formValues={formValues}
+                deviceLocation={deviceLocation}
+                handleInputChange={handleInputChange}
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+              >
+                Enter location to check forecast
+              </Modal>
+            </div>
+          </>
         ) : (
           <Link to={"/forecast/" + `${deviceLocation}`}>
             <Button>Check Weather</Button>
           </Link>
         )}
-      </InputButtonWrapper>
+      </AppDesc>
+      {/*<InputButtonWrapper>*/}
+      {/*  <InputButton deviceLocation={deviceLocation}>*/}
+      {/*    <label htmlFor="location" />*/}
+      {/*    <Input*/}
+      {/*      type="text"*/}
+      {/*      id="location"*/}
+      {/*      name="location"*/}
+      {/*      placeholder="Enter location"*/}
+      {/*      value={formValues.location}*/}
+      {/*      onChange={handleInputChange}*/}
+      {/*      required*/}
+      {/*    />*/}
+      {/*  </InputButton>*/}
+      {/*  {deviceLocation === "" ? (*/}
+      {/*    <Link to={"/forecast/" + `${formValues.location}`}>*/}
+      {/*      <Button>Check Weather</Button>*/}
+      {/*    </Link>*/}
+      {/*  ) : (*/}
+      {/*    <Link to={"/forecast/" + `${deviceLocation}`}>*/}
+      {/*      <Button>Check Weather</Button>*/}
+      {/*    </Link>*/}
+      {/*  )}*/}
+      {/*</InputButtonWrapper>*/}
     </MainPageWrapper>
   );
 };
