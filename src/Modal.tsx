@@ -1,55 +1,52 @@
 import React from "react";
 import {
   Button,
-  Input,
   InputButton,
   InputButtonWrapper,
 } from "./MainPage/MainPage.styles";
-import { Link } from "react-router-dom";
+
+import InputComponent from "./InputComponent";
+import {
+  Close,
+  CloseModalButton,
+  ModalWrapper,
+} from "./Weather/Weather.styles";
 
 const Modal = ({
   open,
-  children,
   onClose,
   formValues,
-  deviceLocation,
   handleInputChange,
+  getWeatherForecast,
 }: {
-  children: any;
   open: boolean;
   onClose: any;
   formValues: any;
   deviceLocation: string;
   handleInputChange: any;
+  getWeatherForecast: any;
 }) => {
   if (!open) return null;
 
   return (
-    <div>
-      {" "}
-      <button onClick={onClose}>X</button>
+    <ModalWrapper>
       <InputButtonWrapper>
-        <InputButton deviceLocation={deviceLocation}>
+        <InputButton>
           <label htmlFor="location" />
-          <Input
-            type="text"
-            id="location"
-            name="location"
-            placeholder="Enter location"
-            value={formValues.location}
-            onChange={handleInputChange}
-            required
+          <InputComponent
+            formValues={formValues}
+            handleInputChange={handleInputChange}
           />
+          <CloseModalButton onClick={onClose}>
+            <Close />
+          </CloseModalButton>
         </InputButton>
 
         {formValues.location === "" ? null : (
-          <Link to={"/forecast/" + `${formValues.location}`}>
-            <Button>Check Weather</Button>
-          </Link>
+          <Button onClick={getWeatherForecast}>Check Weather</Button>
         )}
       </InputButtonWrapper>
-      {children}
-    </div>
+    </ModalWrapper>
   );
 };
 

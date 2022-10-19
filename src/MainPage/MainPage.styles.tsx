@@ -1,27 +1,16 @@
 import styled from "styled-components";
-import ImgBg from "../backgroundmain.jpg";
-
-type Props = {
-  deviceLocation: string;
-};
 
 export const MainPageWrapper = styled.div`
-  background-image: url(${ImgBg});
+  background: transparent;
 
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  height: 100vh;
-  display: flex;
 
+  display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-`;
-
-export const AppName = styled.span`
-  font-size: 2.5rem;
-  color: white;
-  margin-top: 5rem;
 `;
 
 export const AppDesc = styled.span`
@@ -29,6 +18,7 @@ export const AppDesc = styled.span`
   color: white;
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
+  background: transparent;
 `;
 
 export const InputButtonWrapper = styled.div`
@@ -43,7 +33,7 @@ export const Input = styled.input`
   padding: 10px 40px;
   border-radius: 10rem;
   border: none;
-  margin-bottom: 1.5rem;
+
   outline: none;
   cursor: pointer;
   opacity: 0.8;
@@ -57,6 +47,7 @@ export const Button = styled.button`
   background: #5f6385;
   color: white;
   cursor: pointer;
+  margin-bottom: 1rem;
 
   :hover {
     opacity: 0.9;
@@ -65,4 +56,9 @@ export const Button = styled.button`
   }
 `;
 
-export const InputButton = styled.div<Props>``;
+export const InputButton = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+`;

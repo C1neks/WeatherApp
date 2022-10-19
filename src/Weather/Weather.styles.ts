@@ -3,6 +3,7 @@ import { FiSun } from "react-icons/fi";
 import { BsCloudRainHeavy } from "react-icons/bs";
 import { WiCloud } from "react-icons/wi";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { AiFillCloseCircle, AiOutlineSearch } from "react-icons/ai";
 
 type Props = {
   day: string;
@@ -53,12 +54,22 @@ export const WrapperCloud = styled.div`
   color: white;
 `;
 
+export const WrapperWithoutLocation = styled.div`
+  background: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
 export const TopInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 90%;
-  margin-top: 2rem;
+
   color: white;
 `;
 
@@ -238,4 +249,33 @@ export const ChevronDown = styled(BiChevronDown)`
 
 export const ChevronUp = styled(BiChevronUp)`
   opacity: 0.5;
+`;
+
+export const ModalWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const Loop = styled(AiOutlineSearch)`
+  font-size: 1.5rem;
+`;
+
+export const OpenModalButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+`;
+
+export const CloseModalButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+`;
+
+export const Close = styled(AiFillCloseCircle)`
+  font-size: 1.5rem;
 `;
