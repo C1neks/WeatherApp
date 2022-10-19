@@ -69,7 +69,7 @@ export const TopInfo = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 90%;
-
+  margin-top: 2rem;
   color: white;
 `;
 

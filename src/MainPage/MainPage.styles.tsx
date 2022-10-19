@@ -17,7 +17,7 @@ export const AppDesc = styled.span`
   font-size: 0.8rem;
   color: white;
   margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
+
   background: transparent;
 `;
 
