@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { keyframes } from "styled-components";
 
 export const MainPageWrapper = styled.div`
   background: transparent;
@@ -61,4 +62,37 @@ export const InputButton = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 1rem;
+`;
+
+export const LoaderContainer = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  background: rgba(0, 0, 0, 0.834);
+  z-index: 1;
+`;
+
+export const spinAnimation = keyframes`
+
+0% {
+  transform: rotate(0deg);
+}
+100% {
+  transform: rotate(360deg);
+}
+
+`;
+
+export const Spinner = styled.div`
+  width: 64px;
+  height: 64px;
+  border: 8px solid;
+  border-color: #3d5af1 transparent #3d5af1 transparent;
+  border-radius: 50%;
+  animation-name: ${spinAnimation};
+  animation-duration: 1.2s;
+  animation-iteration-count: infinite;
 `;

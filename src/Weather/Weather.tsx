@@ -48,7 +48,12 @@ import {
 import { IconContext } from "react-icons";
 import { DayType, ForecastType, Hour } from "../models";
 import getWeekDay from "./getWeekDay";
-import { AppDesc, MainPageWrapper } from "../MainPage/MainPage.styles";
+import {
+  AppDesc,
+  LoaderContainer,
+  MainPageWrapper,
+  Spinner,
+} from "../MainPage/MainPage.styles";
 import Modal from "../Modal";
 const API_KEY = process.env.REACT_APP_API_KEY;
 const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
@@ -56,7 +61,8 @@ const initialFormState = {
   location: "",
 };
 const Weather: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [deviceLocation, setDeviceLocation] = useState<string>("");
   const [formValues, setFormValues] = useState(initialFormState);
 
@@ -103,6 +109,7 @@ const Weather: React.FC = () => {
   });
 
   const getDeviceLocation = async () => {
+    setLoading(true);
     navigator.geolocation.getCurrentPosition(async function (position) {
       // console.log("Latitude is :", position.coords.latitude);
       // console.log("Longitude is :", position.coords.longitude);
@@ -112,14 +119,19 @@ const Weather: React.FC = () => {
       );
 
       const devLoc = await res.json();
-      console.log(devLoc.plus_code.compound_code.slice(9));
       setDeviceLocation(devLoc.plus_code.compound_code.slice(9));
+
+      setLoading(false);
     });
   };
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       await getDeviceLocation();
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     })();
   }, []);
 
@@ -184,175 +196,187 @@ const Weather: React.FC = () => {
   );
 
   return (
-    <ConditionalWrapper
-      condition={background.icon}
-      wrapper={(
-        children:
-          | string
-          | number
-          | boolean
-          | React.ReactElement<any, string | React.JSXElementConstructor<any>>
-          | React.ReactFragment
-          | React.ReactPortal
-          | null
-          | undefined
-      ) =>
-        background.icon.includes("rain") ? (
-          <WrapperRain>{children}</WrapperRain>
-        ) : background.icon.includes("sunny") ? (
-          <Wrapper>{children}</Wrapper>
-        ) : (
-          <WrapperCloud>{children}</WrapperCloud>
-        )
-      }
-    >
-      {deviceLocation === "" ? (
-        <MainPageWrapper>
-          <AppDesc>
-            <>
-              <ModalWrapper>
-                <OpenModalButton onClick={() => setIsOpen(true)}>
-                  <Loop />
-                </OpenModalButton>
-
-                <Modal
-                  formValues={formValues}
-                  deviceLocation={deviceLocation}
-                  handleInputChange={handleInputChange}
-                  open={isOpen}
-                  onClose={() => setIsOpen(false)}
-                  getWeatherForecast={getWeatherForecast}
-                />
-              </ModalWrapper>
-            </>
-          </AppDesc>
-        </MainPageWrapper>
-      ) : null}
-      <TopInfo>
-        <GiHamburgerMenu />
-        <div>{today.toDateString()}</div>
-        <RiCelsiusLine />
-      </TopInfo>
-
-      <MainInfo>
-        <WeatherInfo>
-          <ForecastLocation>
-            {forecast.address === "" ? (
-              <div>
-                We cannot get your location, please use search button at the top
-                to enter correct location
-              </div>
-            ) : null}
-            {forecast.address.charAt(0).toUpperCase() +
-              forecast.address.slice(1)}
-          </ForecastLocation>
-          {forecast.days.map((day: DayType, i: number) => (
-            <div key={day.datetimeEpoch}>
-              {i === 0 ? (
-                <div>
-                  <TodayForecastDetails>
-                    <IconContext.Provider
-                      value={{ color: "white", size: "80" }}
-                    >
-                      <ActualTemp>
-                        {day.temp.toFixed(0)}
-                        <span>&#176;</span>
-                      </ActualTemp>
-                    </IconContext.Provider>
-                    <HighestAndLowest>
-                      <span>
-                        <ChevronUp /> {day.tempmax.toFixed(0)}
-                        <span>&#176;</span>
-                      </span>
-                      <span>
-                        <ChevronDown />
-                        {day.tempmin.toFixed(0)}
-                        <span>&#176;</span>
-                      </span>
-                    </HighestAndLowest>
-
-                    <Conditions>{day.conditions}</Conditions>
-                    <FeelsLike>
-                      Feels like {day.feelslike.toFixed(0)} <span>&#176;</span>
-                    </FeelsLike>
-                  </TodayForecastDetails>
-                  <HourForecastWrapper>
-                    {day.hours.map((hour: Hour, i: number) =>
-                      hour.datetime >= time ? (
-                        <>
-                          {
-                            <HourForecast>
-                              <StyledHours>
-                                {hour.datetime.slice(0, 2)}
-                                <span>pm</span>
-                              </StyledHours>
-                              <StyledDegree>
-                                {hour.temp.toFixed(0)}
-                                <span>&#176;</span>
-                              </StyledDegree>
-                            </HourForecast>
-                          }
-                        </>
-                      ) : null
-                    )}
-                  </HourForecastWrapper>
-                </div>
-              ) : i > 0 && i <= 6 ? (
-                <LaterForecast>
-                  <WeekDayWrapper>
-                    {getWeekDay(day.datetimeEpoch)}
-                  </WeekDayWrapper>
-                  <IconContext.Provider
-                    value={{
-                      color: "white",
-                      size: "25",
-                    }}
-                  >
-                    {day.icon === "rain" ? (
-                      <WeatherForecastIcon>
-                        <WiRain />
-                      </WeatherForecastIcon>
-                    ) : day.icon === "partly-cloudy-day" ? (
-                      <WeatherForecastIcon>
-                        <WiCloud />
-                      </WeatherForecastIcon>
-                    ) : (
-                      <WeatherForecastIcon>
-                        <WiDaySunny />
-                      </WeatherForecastIcon>
-                    )}
-                    <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
-                    <MaxMinForecast>
-                      <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
-                      <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
-                    </MaxMinForecast>
-                  </IconContext.Provider>
-                </LaterForecast>
-              ) : null}
-            </div>
-          ))}
-          {forecastDetails}
-        </WeatherInfo>
-        <IconContext.Provider
-          value={{
-            color: "white",
-            size: "200",
-          }}
+    <>
+      {loading ? (
+        <LoaderContainer>
+          <Spinner />
+        </LoaderContainer>
+      ) : (
+        <ConditionalWrapper
+          condition={background.icon}
+          wrapper={(
+            children:
+              | string
+              | number
+              | boolean
+              | React.ReactElement<
+                  any,
+                  string | React.JSXElementConstructor<any>
+                >
+              | React.ReactFragment
+              | React.ReactPortal
+              | null
+              | undefined
+          ) =>
+            background.icon.includes("rain") ? (
+              <WrapperRain>{children}</WrapperRain>
+            ) : background.icon.includes("sunny") ? (
+              <Wrapper>{children}</Wrapper>
+            ) : (
+              <WrapperCloud>{children}</WrapperCloud>
+            )
+          }
         >
-          <WeatherIconWrapper>
-            <WeatherIcon>
-              {background.icon.includes("rain") ? (
-                <Rain />
-              ) : background.icon.includes("sunny") ? (
-                <Sun />
-              ) : background.icon.includes("cloud") ? (
-                <Cloud />
-              ) : null}
-            </WeatherIcon>
-          </WeatherIconWrapper>
-        </IconContext.Provider>
-      </MainInfo>
-    </ConditionalWrapper>
+          {deviceLocation === "" ? (
+            <MainPageWrapper>
+              <AppDesc>
+                <>
+                  <ModalWrapper>
+                    <OpenModalButton onClick={() => setIsOpen(true)}>
+                      <Loop />
+                    </OpenModalButton>
+
+                    <Modal
+                      formValues={formValues}
+                      deviceLocation={deviceLocation}
+                      handleInputChange={handleInputChange}
+                      open={isOpen}
+                      onClose={() => setIsOpen(false)}
+                      getWeatherForecast={getWeatherForecast}
+                    />
+                  </ModalWrapper>
+                </>
+              </AppDesc>
+            </MainPageWrapper>
+          ) : null}
+          <TopInfo>
+            <GiHamburgerMenu />
+            <div>{today.toDateString()}</div>
+            <RiCelsiusLine />
+          </TopInfo>
+
+          <MainInfo>
+            <WeatherInfo>
+              <ForecastLocation>
+                {forecast.address === "" ? (
+                  <span>
+                    We cannot get your location, please use search button at the
+                    top to enter correct location
+                  </span>
+                ) : null}
+                {forecast.address.charAt(0).toUpperCase() +
+                  forecast.address.slice(1)}
+              </ForecastLocation>
+              {forecast.days.map((day: DayType, i: number) => (
+                <div key={day.datetimeEpoch}>
+                  {i === 0 ? (
+                    <div>
+                      <TodayForecastDetails>
+                        <IconContext.Provider
+                          value={{ color: "white", size: "80" }}
+                        >
+                          <ActualTemp>
+                            {day.temp.toFixed(0)}
+                            <span>&#176;</span>
+                          </ActualTemp>
+                        </IconContext.Provider>
+                        <HighestAndLowest>
+                          <span>
+                            <ChevronUp /> {day.tempmax.toFixed(0)}
+                            <span>&#176;</span>
+                          </span>
+                          <span>
+                            <ChevronDown />
+                            {day.tempmin.toFixed(0)}
+                            <span>&#176;</span>
+                          </span>
+                        </HighestAndLowest>
+
+                        <Conditions>{day.conditions}</Conditions>
+                        <FeelsLike>
+                          Feels like {day.feelslike.toFixed(0)}{" "}
+                          <span>&#176;</span>
+                        </FeelsLike>
+                      </TodayForecastDetails>
+                      <HourForecastWrapper>
+                        {day.hours.map((hour: Hour, i: number) =>
+                          hour.datetime >= time ? (
+                            <>
+                              {
+                                <HourForecast>
+                                  <StyledHours>
+                                    {hour.datetime.slice(0, 2)}
+                                    <span>pm</span>
+                                  </StyledHours>
+                                  <StyledDegree>
+                                    {hour.temp.toFixed(0)}
+                                    <span>&#176;</span>
+                                  </StyledDegree>
+                                </HourForecast>
+                              }
+                            </>
+                          ) : null
+                        )}
+                      </HourForecastWrapper>
+                    </div>
+                  ) : i > 0 && i <= 6 ? (
+                    <LaterForecast>
+                      <WeekDayWrapper>
+                        {getWeekDay(day.datetimeEpoch)}
+                      </WeekDayWrapper>
+                      <IconContext.Provider
+                        value={{
+                          color: "white",
+                          size: "25",
+                        }}
+                      >
+                        {day.icon === "rain" ? (
+                          <WeatherForecastIcon>
+                            <WiRain />
+                          </WeatherForecastIcon>
+                        ) : day.icon === "partly-cloudy-day" ? (
+                          <WeatherForecastIcon>
+                            <WiCloud />
+                          </WeatherForecastIcon>
+                        ) : (
+                          <WeatherForecastIcon>
+                            <WiDaySunny />
+                          </WeatherForecastIcon>
+                        )}
+                        <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
+                        <MaxMinForecast>
+                          <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
+                          <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
+                        </MaxMinForecast>
+                      </IconContext.Provider>
+                    </LaterForecast>
+                  ) : null}
+                </div>
+              ))}
+              {forecastDetails}
+            </WeatherInfo>
+            <IconContext.Provider
+              value={{
+                color: "white",
+                size: "200",
+              }}
+            >
+              <WeatherIconWrapper>
+                <WeatherIcon>
+                  {background.icon.includes("rain") ? (
+                    <Rain />
+                  ) : background.icon.includes("sunny") ? (
+                    <Sun />
+                  ) : background.icon.includes("cloud") ? (
+                    <Cloud />
+                  ) : null}
+                </WeatherIcon>
+              </WeatherIconWrapper>
+            </IconContext.Provider>
+          </MainInfo>
+        </ConditionalWrapper>
+      )}
+    </>
   );
 };
 
