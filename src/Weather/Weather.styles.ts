@@ -88,6 +88,7 @@ export const MainInfo = styled.div`
 export const WeatherIconWrapper = styled.div`
   width: 50%;
   height: 100%;
+  text-align: center;
 `;
 
 export const WeatherInfo = styled.div`
