@@ -4,9 +4,14 @@ import { BsCloudRainHeavy } from "react-icons/bs";
 import { WiCloud } from "react-icons/wi";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { AiFillCloseCircle, AiOutlineSearch } from "react-icons/ai";
+import { TbMoodSad } from "react-icons/tb";
 
 type Props = {
   day: string;
+};
+
+type BackgroundIcon = {
+  background: string;
 };
 
 export const Wrapper = styled.div`
@@ -88,8 +93,8 @@ export const WeatherInfo = styled.div`
   width: 50%;
 `;
 
-export const WeatherIcon = styled.span`
-  margin-left: 3rem;
+export const WeatherIcon = styled.span<BackgroundIcon>`
+  margin-left: ${(props) => (props.background === "" ? "0rem" : "3rem")};
 `;
 
 export const ForecastLocation = styled.p`
@@ -166,6 +171,13 @@ export const Cloud = styled(WiCloud)`
   background: lightgray;
   border-radius: 20rem;
   padding: 3rem;
+`;
+
+export const Sad = styled(TbMoodSad)`
+  background: transparent;
+  border-radius: 20rem;
+
+  opacity: 0.7;
 `;
 
 export const MoreDetails = styled.div<Props>`

@@ -7,7 +7,6 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Weather />} />
-        <Route path="/forecast/:locationID" element={<Weather />} />
       </Routes>
     </div>
   );

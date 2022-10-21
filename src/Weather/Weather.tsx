@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
-import { AiOutlineSearch } from "react-icons/ai";
+import { TbMoodSad } from "react-icons/tb";
 
-// import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import {
   ActualTemp,
   ChevronDown,
@@ -31,6 +30,7 @@ import {
   OpenModalButton,
   Precip,
   Rain,
+  Sad,
   StyledDegree,
   StyledHours,
   Sun,
@@ -111,9 +111,6 @@ const Weather: React.FC = () => {
   const getDeviceLocation = async () => {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(async function (position) {
-      // console.log("Latitude is :", position.coords.latitude);
-      // console.log("Longitude is :", position.coords.longitude);
-
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
       );
@@ -131,7 +128,7 @@ const Weather: React.FC = () => {
       await getDeviceLocation();
       setTimeout(() => {
         setLoading(false);
-      }, 2000);
+      }, 1000);
     })();
   }, []);
 
@@ -260,8 +257,8 @@ const Weather: React.FC = () => {
               <ForecastLocation>
                 {forecast.address === "" ? (
                   <span>
-                    We cannot get your location, please use search button at the
-                    top to enter correct location
+                    Can't get your location, please use search at the top to
+                    enter correct location
                   </span>
                 ) : null}
                 {forecast.address.charAt(0).toUpperCase() +
@@ -362,14 +359,16 @@ const Weather: React.FC = () => {
               }}
             >
               <WeatherIconWrapper>
-                <WeatherIcon>
+                <WeatherIcon background={background.icon}>
                   {background.icon.includes("rain") ? (
                     <Rain />
                   ) : background.icon.includes("sunny") ? (
                     <Sun />
                   ) : background.icon.includes("cloud") ? (
                     <Cloud />
-                  ) : null}
+                  ) : (
+                    <Sad />
+                  )}
                 </WeatherIcon>
               </WeatherIconWrapper>
             </IconContext.Provider>

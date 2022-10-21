@@ -49,10 +49,11 @@ export const Button = styled.button`
   color: white;
   cursor: pointer;
   margin-bottom: 1rem;
+  opacity: 0.8;
 
   :hover {
-    opacity: 0.9;
-    font-size: 1rem;
+    opacity: 1;
+
     transition: 0.5s;
   }
 `;
