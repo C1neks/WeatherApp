@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
-import { TbMoodSad } from "react-icons/tb";
 
 import {
   ActualTemp,
@@ -19,6 +18,7 @@ import {
   HighestAndLowest,
   HourForecast,
   HourForecastWrapper,
+  IconPercentWrapper,
   LaterForecast,
   Loop,
   MainInfo,
@@ -41,6 +41,7 @@ import {
   WeatherIconWrapper,
   WeatherInfo,
   WeekDayWrapper,
+  WeekForecastWrapper,
   Wrapper,
   WrapperCloud,
   WrapperRain,
@@ -161,6 +162,42 @@ const Weather: React.FC = () => {
   const ConditionalWrapper = ({ condition, wrapper, children }) =>
     condition ? wrapper(children) : children;
 
+  const weekForecast = forecast.days.map((day: DayType, i: number) =>
+    i > 0 && i <= 6 ? (
+      <LaterForecast>
+        <WeekDayWrapper>{getWeekDay(day.datetimeEpoch)}</WeekDayWrapper>
+        <IconContext.Provider
+          value={{
+            color: "white",
+            size: "25",
+          }}
+        >
+          <IconPercentWrapper>
+            {day.icon === "rain" ? (
+              <WeatherForecastIcon>
+                <WiRain />
+              </WeatherForecastIcon>
+            ) : day.icon === "partly-cloudy-day" ? (
+              <WeatherForecastIcon>
+                <WiCloud />
+              </WeatherForecastIcon>
+            ) : (
+              <WeatherForecastIcon>
+                <WiDaySunny />
+              </WeatherForecastIcon>
+            )}
+            <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
+          </IconPercentWrapper>
+
+          <MaxMinForecast>
+            <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
+            <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
+          </MaxMinForecast>
+        </IconContext.Provider>
+      </LaterForecast>
+    ) : null
+  );
+
   const forecastDetails = forecast.days.map((day: DayType, i: number) =>
     i === 0 ? (
       <MoreDetails day={day.icon}>
@@ -217,10 +254,12 @@ const Weather: React.FC = () => {
           ) =>
             background.icon.includes("rain") ? (
               <WrapperRain>{children}</WrapperRain>
-            ) : background.icon.includes("sunny") ? (
+            ) : background.icon.includes("sun") ? (
               <Wrapper>{children}</Wrapper>
-            ) : (
+            ) : background.icon.includes("cloud") ? (
               <WrapperCloud>{children}</WrapperCloud>
+            ) : (
+              <Wrapper>{children}</Wrapper>
             )
           }
         >
@@ -246,7 +285,8 @@ const Weather: React.FC = () => {
               </AppDesc>
             </MainPageWrapper>
           ) : null}
-          <TopInfo>
+
+          <TopInfo background={background.icon}>
             <GiHamburgerMenu />
             <div>{today.toDateString()}</div>
             <RiCelsiusLine />
@@ -295,6 +335,7 @@ const Weather: React.FC = () => {
                           <span>&#176;</span>
                         </FeelsLike>
                       </TodayForecastDetails>
+
                       <HourForecastWrapper>
                         {day.hours.map((hour: Hour, i: number) =>
                           hour.datetime >= time ? (
@@ -316,41 +357,13 @@ const Weather: React.FC = () => {
                         )}
                       </HourForecastWrapper>
                     </div>
-                  ) : i > 0 && i <= 6 ? (
-                    <LaterForecast>
-                      <WeekDayWrapper>
-                        {getWeekDay(day.datetimeEpoch)}
-                      </WeekDayWrapper>
-                      <IconContext.Provider
-                        value={{
-                          color: "white",
-                          size: "25",
-                        }}
-                      >
-                        {day.icon === "rain" ? (
-                          <WeatherForecastIcon>
-                            <WiRain />
-                          </WeatherForecastIcon>
-                        ) : day.icon === "partly-cloudy-day" ? (
-                          <WeatherForecastIcon>
-                            <WiCloud />
-                          </WeatherForecastIcon>
-                        ) : (
-                          <WeatherForecastIcon>
-                            <WiDaySunny />
-                          </WeatherForecastIcon>
-                        )}
-                        <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
-                        <MaxMinForecast>
-                          <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
-                          <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
-                        </MaxMinForecast>
-                      </IconContext.Provider>
-                    </LaterForecast>
                   ) : null}
                 </div>
               ))}
-              {forecastDetails}
+              <WeekForecastWrapper>
+                {weekForecast}
+                {forecastDetails}
+              </WeekForecastWrapper>
             </WeatherInfo>
             <IconContext.Provider
               value={{
@@ -362,10 +375,12 @@ const Weather: React.FC = () => {
                 <WeatherIcon background={background.icon}>
                   {background.icon.includes("rain") ? (
                     <Rain />
-                  ) : background.icon.includes("sunny") ? (
+                  ) : background.icon.includes("sun") ? (
                     <Sun />
                   ) : background.icon.includes("cloud") ? (
                     <Cloud />
+                  ) : background.icon.includes("clear") ? (
+                    <Sun />
                   ) : (
                     <Sad />
                   )}

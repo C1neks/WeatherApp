@@ -69,13 +69,14 @@ export const WrapperWithoutLocation = styled.div`
   color: white;
 `;
 
-export const TopInfo = styled.div`
+export const TopInfo = styled.div<BackgroundIcon>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
-  margin-top: 2rem;
+
   color: white;
+  margin: 2rem 2rem 0rem 2rem;
+  width: ${(props) => (props.background === "" ? "" : "90%")};
 `;
 
 export const MainInfo = styled.div`
@@ -101,6 +102,11 @@ export const ForecastLocation = styled.p`
   color: white;
   font-size: 1.3rem;
   margin-left: 2rem;
+
+  @media only screen and (min-width: 1024px) {
+    text-align: center;
+    font-size: 2.3rem;
+  }
 `;
 
 export const TodayForecastDetails = styled.div`
@@ -112,21 +118,39 @@ export const ActualTemp = styled.p`
   font-size: 5rem;
   font-weight: 400;
   margin: 0;
+
+  @media only screen and (min-width: 1024px) {
+    text-align: center;
+    font-size: 7rem;
+  }
 `;
 export const HighestAndLowest = styled.div`
   display: flex;
   font-size: 1rem;
   font-weight: 400;
+
+  @media only screen and (min-width: 1024px) {
+    justify-content: center;
+    font-size: 2rem;
+  }
 `;
 
 export const Conditions = styled.p`
   margin-top: 3rem;
   font-weight: 500;
+  @media only screen and (min-width: 1024px) {
+    font-size: 2rem;
+    text-align: center;
+  }
 `;
 
 export const FeelsLike = styled.p`
   font-size: 0.9rem;
   opacity: 0.8;
+  @media only screen and (min-width: 1024px) {
+    font-size: 1.7rem;
+    text-align: center;
+  }
 `;
 
 export const HourForecastWrapper = styled.div`
@@ -138,11 +162,12 @@ export const HourForecastWrapper = styled.div`
   align-items: center;
   margin-top: 3.5rem;
   margin-bottom: 1rem;
+  overflow: auto;
 `;
 
 export const HourForecast = styled.div`
   display: flex;
-  padding: 1.2rem;
+  padding: 1rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -162,13 +187,13 @@ export const Sun = styled(FiSun)`
 `;
 
 export const Rain = styled(BsCloudRainHeavy)`
-  background: lightblue;
+  background: #47afd0;
   border-radius: 20rem;
   padding: 3rem;
 `;
 
 export const Cloud = styled(WiCloud)`
-  background: lightgray;
+  background: #d5d8e5;
   border-radius: 20rem;
   padding: 3rem;
 `;
@@ -182,11 +207,13 @@ export const Sad = styled(TbMoodSad)`
 
 export const MoreDetails = styled.div<Props>`
   background: ${(props) =>
-    props.day === "rain"
+    props.day.includes("rain")
       ? "linear-gradient(\n    180deg,\n    rgba(70, 129, 201, 1) 30%,\n    rgba(47, 81, 165, 1) 100%\n  );"
-      : props.day === "sunny"
+      : props.day.includes("sun")
       ? "linear-gradient(\n    180deg,\n    rgba(236, 177, 35, 1) 30%,\n    rgba(236, 121, 4, 1) 100%\n  )"
-      : "linear-gradient(\n    180deg,\n    rgba(179, 195, 210, 1) 30%,\n    rgba(79, 86, 116, 1) 100%\n  )"};
+      : props.day.includes("cloud")
+      ? "linear-gradient(180deg, rgba(164,179,196,1) 0%, rgba(108,116,150,1) 100%)"
+      : "linear-gradient(\n    180deg,\n    rgba(236, 177, 35, 1) 30%,\n    rgba(236, 121, 4, 1) 100%\n  )"};
 
   width: 100vw;
   display: flex;
@@ -195,10 +222,17 @@ export const MoreDetails = styled.div<Props>`
   padding-top: 1rem;
   margin-top: 1rem;
   padding-bottom: 1rem;
+
+  @media only screen and (min-width: 1024px) {
+    justify-content: center;
+  }
 `;
 export const Details = styled.p`
   width: 50%;
   margin: 0;
+  @media only screen and (min-width: 1024px) {
+    width: 26%;
+  }
 `;
 export const StyledDegree = styled.span`
   font-size: 1.4rem;
@@ -219,6 +253,11 @@ export const LaterForecast = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100vw;
+
+  @media only screen and (min-width: 1024px) {
+    justify-content: center;
+    font-size: 1.5rem;
+  }
 `;
 
 export const MaxMinForecast = styled.div`
@@ -249,10 +288,15 @@ export const WeekDay = styled.div`
 export const Precip = styled.span`
   font-size: 0.8rem;
   opacity: 0.7;
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 1.1rem;
+  }
 `;
 
 export const WeatherForecastIcon = styled.div`
   opacity: 0.8;
+  margin-right: 1rem;
 `;
 
 export const ChevronDown = styled(BiChevronDown)`
@@ -290,4 +334,17 @@ export const CloseModalButton = styled.button`
 
 export const Close = styled(AiFillCloseCircle)`
   font-size: 1.5rem;
+`;
+
+export const WeekForecastWrapper = styled.div`
+  text-align: left;
+  @media only screen and (min-width: 1024px) {
+    text-align: center;
+  }
+`;
+
+export const IconPercentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 `;
