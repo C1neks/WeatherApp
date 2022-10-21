@@ -1,6 +1,19 @@
 import styled from "styled-components";
 import { FiSun } from "react-icons/fi";
+import { BsCloudRainHeavy } from "react-icons/bs";
+import { WiCloud } from "react-icons/wi";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { AiFillCloseCircle, AiOutlineSearch } from "react-icons/ai";
+import { TbMoodSad } from "react-icons/tb";
+
+type Props = {
+  day: string;
+};
+
+type BackgroundIcon = {
+  background: string;
+};
+
 export const Wrapper = styled.div`
   background: rgb(236, 177, 35);
   background: linear-gradient(
@@ -8,6 +21,46 @@ export const Wrapper = styled.div`
     rgba(236, 177, 35, 1) 30%,
     rgba(236, 121, 4, 1) 100%
   );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperRain = styled.div`
+  background: rgb(70, 129, 201);
+  background: linear-gradient(
+    180deg,
+    rgba(70, 129, 201, 1) 30%,
+    rgba(47, 81, 165, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperCloud = styled.div`
+  background: rgb(179, 195, 210);
+  background: linear-gradient(
+    180deg,
+    rgba(179, 195, 210, 1) 30%,
+    rgba(79, 86, 116, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperWithoutLocation = styled.div`
+  background: black;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -40,19 +93,19 @@ export const WeatherInfo = styled.div`
   width: 50%;
 `;
 
-export const WeatherIcon = styled.span`
-  margin-left: 3rem;
+export const WeatherIcon = styled.span<BackgroundIcon>`
+  margin-left: ${(props) => (props.background === "" ? "0rem" : "3rem")};
 `;
 
 export const ForecastLocation = styled.p`
   color: white;
   font-size: 1.3rem;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 
 export const TodayForecastDetails = styled.div`
   color: white;
-  margin-left: 1rem;
+  margin-left: 2rem;
 `;
 
 export const ActualTemp = styled.p`
@@ -108,11 +161,40 @@ export const Sun = styled(FiSun)`
   padding: 3rem;
 `;
 
-export const MoreDetails = styled.div`
+export const Rain = styled(BsCloudRainHeavy)`
+  background: lightblue;
+  border-radius: 20rem;
+  padding: 3rem;
+`;
+
+export const Cloud = styled(WiCloud)`
+  background: lightgray;
+  border-radius: 20rem;
+  padding: 3rem;
+`;
+
+export const Sad = styled(TbMoodSad)`
+  background: transparent;
+  border-radius: 20rem;
+
+  opacity: 0.7;
+`;
+
+export const MoreDetails = styled.div<Props>`
+  background: ${(props) =>
+    props.day === "rain"
+      ? "linear-gradient(\n    180deg,\n    rgba(70, 129, 201, 1) 30%,\n    rgba(47, 81, 165, 1) 100%\n  );"
+      : props.day === "sunny"
+      ? "linear-gradient(\n    180deg,\n    rgba(236, 177, 35, 1) 30%,\n    rgba(236, 121, 4, 1) 100%\n  )"
+      : "linear-gradient(\n    180deg,\n    rgba(179, 195, 210, 1) 30%,\n    rgba(79, 86, 116, 1) 100%\n  )"};
+
   width: 100vw;
   display: flex;
   flex-wrap: wrap;
-  margin-left: 1rem;
+  padding-left: 2rem;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
 `;
 export const Details = styled.p`
   width: 50%;
@@ -179,4 +261,33 @@ export const ChevronDown = styled(BiChevronDown)`
 
 export const ChevronUp = styled(BiChevronUp)`
   opacity: 0.5;
+`;
+
+export const ModalWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const Loop = styled(AiOutlineSearch)`
+  font-size: 1.5rem;
+`;
+
+export const OpenModalButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+`;
+
+export const CloseModalButton = styled.button`
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+`;
+
+export const Close = styled(AiFillCloseCircle)`
+  font-size: 1.5rem;
 `;
