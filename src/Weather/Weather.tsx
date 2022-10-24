@@ -57,8 +57,6 @@ import {
 } from "../MainPage/MainPage.styles";
 import Modal from "../Modal";
 
-const API_KEY = process.env.REACT_APP_API_KEY;
-const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
 const initialFormState = {
   location: "",
 };
@@ -115,7 +113,7 @@ const Weather: React.FC = () => {
 
     navigator.geolocation.getCurrentPosition(async function (position) {
       const res = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${process.env.REACT_APP_GOOGLE}`
       );
       setLoading(false);
       const devLoc = await res.json();
@@ -142,14 +140,14 @@ const Weather: React.FC = () => {
   const getWeatherForecast = async () => {
     if (deviceLocation !== "") {
       const result = await fetch(
-        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${deviceLocation}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
+        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${deviceLocation}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
       );
       const res = await result.json();
       setForecast(res);
       setBackground(res.days[0]);
     } else {
       const result = await fetch(
-        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${formValues.location}?unitGroup=metric&include=days%2Chours&key=${API_KEY}&contentType=json`
+        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${formValues.location}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
       );
       const res = await result.json();
       setForecast(res);
