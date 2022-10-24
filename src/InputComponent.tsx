@@ -5,13 +5,13 @@ const InputComponent = ({
   formValues,
   handleInputChange,
 }: {
-  formValues: any;
-  handleInputChange: any;
+  formValues: { location: string };
+  handleInputChange: (e: any) => void;
 }) => {
   return (
     <div>
       <Input
-        type="text"
+        type="search"
         autoFocus
         id="location"
         name="location"

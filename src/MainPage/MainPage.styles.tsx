@@ -31,13 +31,13 @@ export const InputButtonWrapper = styled.div`
 `;
 
 export const Input = styled.input`
-  padding: 10px 40px;
-  border-radius: 10rem;
+  font-family: "Urbanist", sans-serif;
+  padding: 10px 30px;
+  border-radius: 5px;
   border: none;
 
   outline: none;
   cursor: pointer;
-  opacity: 0.8;
 `;
 
 export const Button = styled.button`

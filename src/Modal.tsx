@@ -10,6 +10,7 @@ import {
   Close,
   CloseModalButton,
   ModalWrapper,
+  TryAgainButton,
 } from "./Weather/Weather.styles";
 
 const Modal = ({
@@ -18,13 +19,15 @@ const Modal = ({
   formValues,
   handleInputChange,
   getWeatherForecast,
+  getDeviceLocation,
 }: {
   open: boolean;
-  onClose: any;
-  formValues: any;
+  onClose: () => void;
+  formValues: { location: string };
   deviceLocation: string;
-  handleInputChange: any;
-  getWeatherForecast: any;
+  handleInputChange: (e: any) => void;
+  getWeatherForecast: () => void;
+  getDeviceLocation: () => void;
 }) => {
   if (!open) return null;
 
@@ -37,6 +40,7 @@ const Modal = ({
             formValues={formValues}
             handleInputChange={handleInputChange}
           />
+          <TryAgainButton onClick={getDeviceLocation}>Try Again</TryAgainButton>
           <CloseModalButton onClick={onClose}>
             <Close />
           </CloseModalButton>

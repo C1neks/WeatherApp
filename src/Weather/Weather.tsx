@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
-import { TbMoodSad } from "react-icons/tb";
 
 import {
   ActualTemp,
@@ -19,6 +18,7 @@ import {
   HighestAndLowest,
   HourForecast,
   HourForecastWrapper,
+  IconPercentWrapper,
   LaterForecast,
   Loop,
   MainInfo,
@@ -41,6 +41,7 @@ import {
   WeatherIconWrapper,
   WeatherInfo,
   WeekDayWrapper,
+  WeekForecastWrapper,
   Wrapper,
   WrapperCloud,
   WrapperRain,
@@ -55,6 +56,7 @@ import {
   Spinner,
 } from "../MainPage/MainPage.styles";
 import Modal from "../Modal";
+
 const API_KEY = process.env.REACT_APP_API_KEY;
 const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
 const initialFormState = {
@@ -110,15 +112,14 @@ const Weather: React.FC = () => {
 
   const getDeviceLocation = async () => {
     setLoading(true);
+
     navigator.geolocation.getCurrentPosition(async function (position) {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
       );
-
+      setLoading(false);
       const devLoc = await res.json();
       setDeviceLocation(devLoc.plus_code.compound_code.slice(9));
-
-      setLoading(false);
     });
   };
 
@@ -157,9 +158,59 @@ const Weather: React.FC = () => {
     }
   };
 
-  // @ts-ignore
-  const ConditionalWrapper = ({ condition, wrapper, children }) =>
-    condition ? wrapper(children) : children;
+  const ConditionalWrapper = ({
+    condition,
+    wrapper,
+    children,
+  }: {
+    condition: string;
+    children:
+      | string
+      | number
+      | boolean
+      | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+      | React.ReactFragment
+      | React.ReactPortal
+      | null
+      | undefined;
+    wrapper: (children: any) => any;
+  }) => (condition ? wrapper(children) : children);
+
+  const weekForecast = forecast.days.map((day: DayType, i: number) =>
+    i > 0 && i <= 6 ? (
+      <LaterForecast>
+        <WeekDayWrapper>{getWeekDay(day.datetimeEpoch)}</WeekDayWrapper>
+        <IconContext.Provider
+          value={{
+            color: "white",
+            size: "25",
+          }}
+        >
+          <IconPercentWrapper>
+            {day.icon === "rain" ? (
+              <WeatherForecastIcon>
+                <WiRain />
+              </WeatherForecastIcon>
+            ) : day.icon === "partly-cloudy-day" ? (
+              <WeatherForecastIcon>
+                <WiCloud />
+              </WeatherForecastIcon>
+            ) : (
+              <WeatherForecastIcon>
+                <WiDaySunny />
+              </WeatherForecastIcon>
+            )}
+            <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
+          </IconPercentWrapper>
+
+          <MaxMinForecast>
+            <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
+            <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
+          </MaxMinForecast>
+        </IconContext.Provider>
+      </LaterForecast>
+    ) : null
+  );
 
   const forecastDetails = forecast.days.map((day: DayType, i: number) =>
     i === 0 ? (
@@ -201,26 +252,15 @@ const Weather: React.FC = () => {
       ) : (
         <ConditionalWrapper
           condition={background.icon}
-          wrapper={(
-            children:
-              | string
-              | number
-              | boolean
-              | React.ReactElement<
-                  any,
-                  string | React.JSXElementConstructor<any>
-                >
-              | React.ReactFragment
-              | React.ReactPortal
-              | null
-              | undefined
-          ) =>
+          wrapper={(children) =>
             background.icon.includes("rain") ? (
               <WrapperRain>{children}</WrapperRain>
-            ) : background.icon.includes("sunny") ? (
+            ) : background.icon.includes("sun") ? (
               <Wrapper>{children}</Wrapper>
-            ) : (
+            ) : background.icon.includes("cloud") ? (
               <WrapperCloud>{children}</WrapperCloud>
+            ) : (
+              <Wrapper>{children}</Wrapper>
             )
           }
         >
@@ -240,13 +280,15 @@ const Weather: React.FC = () => {
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       getWeatherForecast={getWeatherForecast}
+                      getDeviceLocation={getDeviceLocation}
                     />
                   </ModalWrapper>
                 </>
               </AppDesc>
             </MainPageWrapper>
           ) : null}
-          <TopInfo>
+
+          <TopInfo background={background.icon}>
             <GiHamburgerMenu />
             <div>{today.toDateString()}</div>
             <RiCelsiusLine />
@@ -258,7 +300,7 @@ const Weather: React.FC = () => {
                 {forecast.address === "" ? (
                   <span>
                     Can't get your location, please use search at the top to
-                    enter correct location
+                    enter correct location or try again.
                   </span>
                 ) : null}
                 {forecast.address.charAt(0).toUpperCase() +
@@ -295,6 +337,7 @@ const Weather: React.FC = () => {
                           <span>&#176;</span>
                         </FeelsLike>
                       </TodayForecastDetails>
+
                       <HourForecastWrapper>
                         {day.hours.map((hour: Hour, i: number) =>
                           hour.datetime >= time ? (
@@ -316,41 +359,13 @@ const Weather: React.FC = () => {
                         )}
                       </HourForecastWrapper>
                     </div>
-                  ) : i > 0 && i <= 6 ? (
-                    <LaterForecast>
-                      <WeekDayWrapper>
-                        {getWeekDay(day.datetimeEpoch)}
-                      </WeekDayWrapper>
-                      <IconContext.Provider
-                        value={{
-                          color: "white",
-                          size: "25",
-                        }}
-                      >
-                        {day.icon === "rain" ? (
-                          <WeatherForecastIcon>
-                            <WiRain />
-                          </WeatherForecastIcon>
-                        ) : day.icon === "partly-cloudy-day" ? (
-                          <WeatherForecastIcon>
-                            <WiCloud />
-                          </WeatherForecastIcon>
-                        ) : (
-                          <WeatherForecastIcon>
-                            <WiDaySunny />
-                          </WeatherForecastIcon>
-                        )}
-                        <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
-                        <MaxMinForecast>
-                          <MaxMinSpan>{day.tempmax.toFixed(0)}</MaxMinSpan>
-                          <MinSpan>{day.tempmin.toFixed(0)}</MinSpan>
-                        </MaxMinForecast>
-                      </IconContext.Provider>
-                    </LaterForecast>
                   ) : null}
                 </div>
               ))}
-              {forecastDetails}
+              <WeekForecastWrapper>
+                {weekForecast}
+                {forecastDetails}
+              </WeekForecastWrapper>
             </WeatherInfo>
             <IconContext.Provider
               value={{
@@ -362,10 +377,12 @@ const Weather: React.FC = () => {
                 <WeatherIcon background={background.icon}>
                   {background.icon.includes("rain") ? (
                     <Rain />
-                  ) : background.icon.includes("sunny") ? (
+                  ) : background.icon.includes("sun") ? (
                     <Sun />
                   ) : background.icon.includes("cloud") ? (
                     <Cloud />
+                  ) : background.icon.includes("clear") ? (
+                    <Sun />
                   ) : (
                     <Sad />
                   )}
