@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
@@ -56,6 +56,7 @@ import {
   Spinner,
 } from "../MainPage/MainPage.styles";
 import Modal from "../Modal";
+
 const API_KEY = process.env.REACT_APP_API_KEY;
 const GLE_API_KEY = process.env.REACT_APP_GOOGLE;
 const initialFormState = {
@@ -111,15 +112,14 @@ const Weather: React.FC = () => {
 
   const getDeviceLocation = async () => {
     setLoading(true);
+
     navigator.geolocation.getCurrentPosition(async function (position) {
       const res = await fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${GLE_API_KEY}`
       );
-
+      setLoading(false);
       const devLoc = await res.json();
       setDeviceLocation(devLoc.plus_code.compound_code.slice(9));
-
-      setLoading(false);
     });
   };
 
@@ -158,9 +158,23 @@ const Weather: React.FC = () => {
     }
   };
 
-  // @ts-ignore
-  const ConditionalWrapper = ({ condition, wrapper, children }) =>
-    condition ? wrapper(children) : children;
+  const ConditionalWrapper = ({
+    condition,
+    wrapper,
+    children,
+  }: {
+    condition: string;
+    children:
+      | string
+      | number
+      | boolean
+      | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+      | React.ReactFragment
+      | React.ReactPortal
+      | null
+      | undefined;
+    wrapper: (children: any) => any;
+  }) => (condition ? wrapper(children) : children);
 
   const weekForecast = forecast.days.map((day: DayType, i: number) =>
     i > 0 && i <= 6 ? (
@@ -238,20 +252,7 @@ const Weather: React.FC = () => {
       ) : (
         <ConditionalWrapper
           condition={background.icon}
-          wrapper={(
-            children:
-              | string
-              | number
-              | boolean
-              | React.ReactElement<
-                  any,
-                  string | React.JSXElementConstructor<any>
-                >
-              | React.ReactFragment
-              | React.ReactPortal
-              | null
-              | undefined
-          ) =>
+          wrapper={(children) =>
             background.icon.includes("rain") ? (
               <WrapperRain>{children}</WrapperRain>
             ) : background.icon.includes("sun") ? (
@@ -279,6 +280,7 @@ const Weather: React.FC = () => {
                       open={isOpen}
                       onClose={() => setIsOpen(false)}
                       getWeatherForecast={getWeatherForecast}
+                      getDeviceLocation={getDeviceLocation}
                     />
                   </ModalWrapper>
                 </>
@@ -298,7 +300,7 @@ const Weather: React.FC = () => {
                 {forecast.address === "" ? (
                   <span>
                     Can't get your location, please use search at the top to
-                    enter correct location
+                    enter correct location or try again.
                   </span>
                 ) : null}
                 {forecast.address.charAt(0).toUpperCase() +

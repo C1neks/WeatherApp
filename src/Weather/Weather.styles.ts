@@ -349,3 +349,13 @@ export const IconPercentWrapper = styled.div`
   align-items: center;
   justify-content: space-evenly;
 `;
+
+export const TryAgainButton = styled.button`
+  font-family: "Urbanist", sans-serif;
+  border: none;
+  border-radius: 5px;
+  background: white;
+  color: black;
+  margin-left: 0.5rem;
+  padding: 10px 15px;
+`;
