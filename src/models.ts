@@ -1,5 +1,5 @@
 export interface ForecastType {
-  address: string;
+  resolvedAddress: string;
   days: DayType[];
 }
 
