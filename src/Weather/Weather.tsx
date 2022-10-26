@@ -149,6 +149,7 @@ const Weather: React.FC = () => {
   }, [deviceLocation]);
 
   const getWeatherForecast = async () => {
+    setIsOpen(false);
     if (deviceLocation !== "") {
       if (formValues.location !== "") {
         setDeviceLocation(formValues.location);
@@ -258,7 +259,7 @@ const Weather: React.FC = () => {
   );
 
   return (
-    <>
+    <div>
       {loading ? (
         <LoaderContainer>
           <Spinner />
@@ -278,59 +279,103 @@ const Weather: React.FC = () => {
             )
           }
         >
-          {deviceLocation === "" ? (
-            <MainPageWrapper>
-              <AppDesc>
-                <>
-                  <ModalWrapper>
-                    <OpenModalButton onClick={() => setIsOpen(true)}>
-                      <Loop />
-                    </OpenModalButton>
+          {/*{deviceLocation === "" ? (*/}
+          {/*  <MainPageWrapper>*/}
+          {/*    <AppDesc>*/}
+          {/*      <>*/}
+          {/*        <ModalWrapper>*/}
+          {/*          <OpenModalButton onClick={() => setIsOpen(true)}>*/}
+          {/*            <Loop />*/}
+          {/*          </OpenModalButton>*/}
 
-                    <Modal
-                      formValues={formValues}
-                      deviceLocation={deviceLocation}
-                      handleInputChange={handleInputChange}
-                      open={isOpen}
-                      onClose={() => setIsOpen(false)}
-                      getWeatherForecast={getWeatherForecast}
-                      getDeviceLocation={getDeviceLocation}
-                    />
-                  </ModalWrapper>
-                </>
-              </AppDesc>
-            </MainPageWrapper>
-          ) : (
-            <MainPageWrapper>
-              <AppDesc>
-                <>
-                  <ModalWrapper>
-                    <OpenModalButton onClick={() => setIsOpen(true)}>
-                      <Loop />
-                    </OpenModalButton>
+          {/*          <Modal*/}
+          {/*            formValues={formValues}*/}
+          {/*            deviceLocation={deviceLocation}*/}
+          {/*            handleInputChange={handleInputChange}*/}
+          {/*            open={isOpen}*/}
+          {/*            onClose={() => setIsOpen(false)}*/}
+          {/*            getWeatherForecast={getWeatherForecast}*/}
+          {/*            getDeviceLocation={getDeviceLocation}*/}
+          {/*          />*/}
+          {/*        </ModalWrapper>*/}
+          {/*      </>*/}
+          {/*    </AppDesc>*/}
+          {/*  </MainPageWrapper>*/}
+          {/*) : (*/}
+          {/*  <MainPageWrapper>*/}
+          {/*    <AppDesc>*/}
+          {/*      <>*/}
+          {/*        <ModalWrapper>*/}
+          {/*          <OpenModalButton onClick={() => setIsOpen(true)}>*/}
+          {/*            <Loop />*/}
+          {/*          </OpenModalButton>*/}
 
-                    <Modal
-                      formValues={formValues}
-                      deviceLocation={deviceLocation}
-                      handleInputChange={handleInputChange}
-                      open={isOpen}
-                      onClose={() => setIsOpen(false)}
-                      getWeatherForecast={getWeatherForecast}
-                      getDeviceLocation={getDeviceLocation}
-                    />
-                  </ModalWrapper>
-                </>
-              </AppDesc>
-            </MainPageWrapper>
-          )}
+          {/*          <Modal*/}
+          {/*            formValues={formValues}*/}
+          {/*            deviceLocation={deviceLocation}*/}
+          {/*            handleInputChange={handleInputChange}*/}
+          {/*            open={isOpen}*/}
+          {/*            onClose={() => setIsOpen(false)}*/}
+          {/*            getWeatherForecast={getWeatherForecast}*/}
+          {/*            getDeviceLocation={getDeviceLocation}*/}
+          {/*          />*/}
+          {/*        </ModalWrapper>*/}
+          {/*      </>*/}
+          {/*    </AppDesc>*/}
+          {/*  </MainPageWrapper>*/}
+          {/*)}*/}
 
           <TopInfo background={background.icon}>
-            <GiHamburgerMenu />
+            {deviceLocation === "" ? (
+              <MainPageWrapper>
+                <AppDesc>
+                  <>
+                    <ModalWrapper>
+                      <OpenModalButton onClick={() => setIsOpen(true)}>
+                        <Loop />
+                      </OpenModalButton>
+
+                      <Modal
+                        formValues={formValues}
+                        deviceLocation={deviceLocation}
+                        handleInputChange={handleInputChange}
+                        open={isOpen}
+                        onClose={() => setIsOpen(false)}
+                        getWeatherForecast={getWeatherForecast}
+                        getDeviceLocation={getDeviceLocation}
+                      />
+                    </ModalWrapper>
+                  </>
+                </AppDesc>
+              </MainPageWrapper>
+            ) : (
+              <MainPageWrapper>
+                <AppDesc>
+                  <>
+                    <ModalWrapper>
+                      <OpenModalButton onClick={() => setIsOpen(true)}>
+                        <Loop />
+                      </OpenModalButton>
+
+                      <Modal
+                        formValues={formValues}
+                        deviceLocation={deviceLocation}
+                        handleInputChange={handleInputChange}
+                        open={isOpen}
+                        onClose={() => setIsOpen(false)}
+                        getWeatherForecast={getWeatherForecast}
+                        getDeviceLocation={getDeviceLocation}
+                      />
+                    </ModalWrapper>
+                  </>
+                </AppDesc>
+              </MainPageWrapper>
+            )}
             <div>{today.toDateString()}</div>
             <RiCelsiusLine />
           </TopInfo>
 
-          <MainInfo>
+          <MainInfo onClick={() => setIsOpen(false)}>
             <WeatherInfo>
               <ForecastLocation>
                 {forecast.resolvedAddress === "" ? (
@@ -427,7 +472,7 @@ const Weather: React.FC = () => {
           </MainInfo>
         </ConditionalWrapper>
       )}
-    </>
+    </div>
   );
 };
 

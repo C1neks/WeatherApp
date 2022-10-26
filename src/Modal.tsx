@@ -35,20 +35,18 @@ const Modal = ({
     <ModalWrapper>
       <InputButtonWrapper>
         <InputButton>
-          <label htmlFor="location" />
-          <InputComponent
-            formValues={formValues}
-            handleInputChange={handleInputChange}
-          />
-          <TryAgainButton onClick={getDeviceLocation}>Try Again</TryAgainButton>
-          <CloseModalButton onClick={onClose}>
-            <Close />
-          </CloseModalButton>
-        </InputButton>
+          <form onSubmit={getWeatherForecast}>
+            <label htmlFor="location" />
+            <InputComponent
+              formValues={formValues}
+              handleInputChange={handleInputChange}
+            />
 
-        {formValues.location === "" ? null : (
-          <Button onClick={getWeatherForecast}>Check Weather</Button>
-        )}
+            <button type="button"></button>
+          </form>
+
+          <TryAgainButton onClick={getDeviceLocation}>Try Again</TryAgainButton>
+        </InputButton>
       </InputButtonWrapper>
     </ModalWrapper>
   );
