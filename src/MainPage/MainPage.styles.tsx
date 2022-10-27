@@ -32,30 +32,12 @@ export const InputButtonWrapper = styled.div`
 
 export const Input = styled.input`
   font-family: "Urbanist", sans-serif;
-  padding: 10px 30px;
+  padding: 5px 5px;
   border-radius: 5px;
   border: none;
 
   outline: none;
   cursor: pointer;
-`;
-
-export const Button = styled.button`
-  border: none;
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 20rem;
-  background: #5f6385;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  opacity: 0.8;
-
-  :hover {
-    opacity: 1;
-
-    transition: 0.5s;
-  }
 `;
 
 export const InputButton = styled.div`

@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { GiHamburgerMenu } from "react-icons/gi";
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
 
@@ -61,6 +61,11 @@ const initialFormState = {
   location: "",
 };
 const Weather: React.FC = () => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const param = searchParams.get("name");
+
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [deviceLocation, setDeviceLocation] = useState<string>("");
@@ -88,7 +93,7 @@ const Weather: React.FC = () => {
     todayDate.getSeconds();
 
   const [forecast, setForecast] = useState<ForecastType>({
-    address: "",
+    resolvedAddress: "",
     days: [],
   });
   const [background, setBackground] = useState<DayType>({
@@ -109,16 +114,20 @@ const Weather: React.FC = () => {
   });
 
   const getDeviceLocation = async () => {
-    setLoading(true);
+    if (param) {
+      setDeviceLocation(param);
+    } else {
+      setLoading(true);
 
-    navigator.geolocation.getCurrentPosition(async function (position) {
-      const res = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${process.env.REACT_APP_GOOGLE}`
-      );
-      setLoading(false);
-      const devLoc = await res.json();
-      setDeviceLocation(devLoc.plus_code.compound_code.slice(9));
-    });
+      navigator.geolocation.getCurrentPosition(async function (position) {
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${process.env.REACT_APP_GOOGLE}`
+        );
+        setLoading(false);
+        const devLoc = await res.json();
+        setDeviceLocation(devLoc.plus_code.compound_code.slice(9));
+      });
+    }
   };
 
   useEffect(() => {
@@ -134,11 +143,21 @@ const Weather: React.FC = () => {
   useEffect(() => {
     (async () => {
       await getWeatherForecast();
+
+      navigate({ pathname: "/city", search: `?name=${deviceLocation}` });
     })();
   }, [deviceLocation]);
 
+  const onClose = () => {
+    setIsOpen(false);
+  };
   const getWeatherForecast = async () => {
+    setIsOpen(false);
     if (deviceLocation !== "") {
+      if (formValues.location !== "") {
+        setDeviceLocation(formValues.location);
+      }
+
       const result = await fetch(
         `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${deviceLocation}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
       );
@@ -146,13 +165,14 @@ const Weather: React.FC = () => {
       setForecast(res);
       setBackground(res.days[0]);
     } else {
+      navigate({ pathname: "/city", search: `?name=${formValues.location}` });
       const result = await fetch(
         `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${formValues.location}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
       );
       const res = await result.json();
       setForecast(res);
       setBackground(res.days[0]);
-      setIsOpen(false);
+      // setIsOpen(false);
     }
   };
 
@@ -242,7 +262,7 @@ const Weather: React.FC = () => {
   );
 
   return (
-    <>
+    <div>
       {loading ? (
         <LoaderContainer>
           <Spinner />
@@ -262,32 +282,56 @@ const Weather: React.FC = () => {
             )
           }
         >
-          {deviceLocation === "" ? (
-            <MainPageWrapper>
-              <AppDesc>
-                <>
-                  <ModalWrapper>
-                    <OpenModalButton onClick={() => setIsOpen(true)}>
-                      <Loop />
-                    </OpenModalButton>
-
-                    <Modal
-                      formValues={formValues}
-                      deviceLocation={deviceLocation}
-                      handleInputChange={handleInputChange}
-                      open={isOpen}
-                      onClose={() => setIsOpen(false)}
-                      getWeatherForecast={getWeatherForecast}
-                      getDeviceLocation={getDeviceLocation}
-                    />
-                  </ModalWrapper>
-                </>
-              </AppDesc>
-            </MainPageWrapper>
-          ) : null}
-
           <TopInfo background={background.icon}>
-            <GiHamburgerMenu />
+            {deviceLocation === "" ? (
+              <MainPageWrapper>
+                <AppDesc>
+                  <>
+                    <ModalWrapper>
+                      {!isOpen ? (
+                        <OpenModalButton onClick={() => setIsOpen(true)}>
+                          <Loop />
+                        </OpenModalButton>
+                      ) : null}
+
+                      <Modal
+                        formValues={formValues}
+                        deviceLocation={deviceLocation}
+                        handleInputChange={handleInputChange}
+                        open={isOpen}
+                        onClose={onClose}
+                        getWeatherForecast={getWeatherForecast}
+                        getDeviceLocation={getDeviceLocation}
+                      />
+                    </ModalWrapper>
+                  </>
+                </AppDesc>
+              </MainPageWrapper>
+            ) : (
+              <MainPageWrapper>
+                <AppDesc>
+                  <>
+                    <ModalWrapper>
+                      {!isOpen ? (
+                        <OpenModalButton onClick={() => setIsOpen(true)}>
+                          <Loop />
+                        </OpenModalButton>
+                      ) : null}
+
+                      <Modal
+                        formValues={formValues}
+                        deviceLocation={deviceLocation}
+                        handleInputChange={handleInputChange}
+                        open={isOpen}
+                        onClose={onClose}
+                        getWeatherForecast={getWeatherForecast}
+                        getDeviceLocation={getDeviceLocation}
+                      />
+                    </ModalWrapper>
+                  </>
+                </AppDesc>
+              </MainPageWrapper>
+            )}
             <div>{today.toDateString()}</div>
             <RiCelsiusLine />
           </TopInfo>
@@ -295,14 +339,13 @@ const Weather: React.FC = () => {
           <MainInfo>
             <WeatherInfo>
               <ForecastLocation>
-                {forecast.address === "" ? (
+                {forecast.resolvedAddress === "" ? (
                   <span>
                     Can't get your location, please use search at the top to
                     enter correct location or try again.
                   </span>
                 ) : null}
-                {forecast.address.charAt(0).toUpperCase() +
-                  forecast.address.slice(1)}
+                {forecast.resolvedAddress}
               </ForecastLocation>
               {forecast.days.map((day: DayType, i: number) => (
                 <div key={day.datetimeEpoch}>
@@ -390,7 +433,7 @@ const Weather: React.FC = () => {
           </MainInfo>
         </ConditionalWrapper>
       )}
-    </>
+    </div>
   );
 };
 

@@ -4,9 +4,11 @@ import { Input } from "./MainPage/MainPage.styles";
 const InputComponent = ({
   formValues,
   handleInputChange,
+  onClose,
 }: {
   formValues: { location: string };
   handleInputChange: (e: any) => void;
+  onClose: () => void;
 }) => {
   return (
     <div>
@@ -18,6 +20,7 @@ const InputComponent = ({
         placeholder="Enter location"
         value={formValues.location}
         onChange={handleInputChange}
+        onBlur={onClose}
         required
       />
     </div>
