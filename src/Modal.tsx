@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  Button,
-  InputButton,
-  InputButtonWrapper,
-} from "./MainPage/MainPage.styles";
+import { InputButton, InputButtonWrapper } from "./MainPage/MainPage.styles";
 
 import InputComponent from "./InputComponent";
 import {
-  Close,
-  CloseModalButton,
+  Form,
+  LocationButton,
+  LocationIcon,
   ModalWrapper,
-  TryAgainButton,
+  SearchBarLoop,
+  SubmitButton,
 } from "./Weather/Weather.styles";
 
 const Modal = ({
@@ -35,17 +33,19 @@ const Modal = ({
     <ModalWrapper>
       <InputButtonWrapper>
         <InputButton>
-          <form onSubmit={getWeatherForecast}>
-            <label htmlFor="location" />
+          <Form onSubmit={getWeatherForecast}>
             <InputComponent
               formValues={formValues}
               handleInputChange={handleInputChange}
+              onClose={onClose}
             />
-
-            <button type="button"></button>
-          </form>
-
-          <TryAgainButton onClick={getDeviceLocation}>Try Again</TryAgainButton>
+            <SubmitButton type="submit" onMouseDown={getWeatherForecast}>
+              <SearchBarLoop />
+            </SubmitButton>
+          </Form>
+          <LocationButton onMouseDown={getDeviceLocation}>
+            <LocationIcon></LocationIcon>
+          </LocationButton>
         </InputButton>
       </InputButtonWrapper>
     </ModalWrapper>

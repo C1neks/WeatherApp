@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { FiSun } from "react-icons/fi";
 import { BsCloudRainHeavy } from "react-icons/bs";
 import { WiCloud } from "react-icons/wi";
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { AiFillCloseCircle, AiOutlineSearch } from "react-icons/ai";
+import { BiChevronDown, BiChevronUp, BiNavigation } from "react-icons/bi";
+import { AiOutlineSearch } from "react-icons/ai";
 import { TbMoodSad } from "react-icons/tb";
 
 type Props = {
@@ -51,16 +51,6 @@ export const WrapperCloud = styled.div`
     rgba(179, 195, 210, 1) 30%,
     rgba(79, 86, 116, 1) 100%
   );
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  color: white;
-`;
-
-export const WrapperWithoutLocation = styled.div`
-  background: black;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -319,22 +309,15 @@ export const Loop = styled(AiOutlineSearch)`
   font-size: 1.5rem;
 `;
 
+export const SearchBarLoop = styled(AiOutlineSearch)`
+  color: gray;
+`;
+
 export const OpenModalButton = styled.button`
   background: none;
   border: none;
   color: white;
   cursor: pointer;
-`;
-
-export const CloseModalButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-`;
-
-export const Close = styled(AiFillCloseCircle)`
-  font-size: 1.5rem;
 `;
 
 export const WeekForecastWrapper = styled.div`
@@ -350,12 +333,37 @@ export const IconPercentWrapper = styled.div`
   justify-content: space-evenly;
 `;
 
-export const TryAgainButton = styled.button`
-  font-family: "Urbanist", sans-serif;
+export const Form = styled.form`
+  position: relative;
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+  }
+`;
+
+export const SubmitButton = styled.button`
+  position: absolute;
+  top: 0.3rem;
+  right: 0.3rem;
+  background: none;
   border: none;
-  border-radius: 5px;
-  background: white;
-  color: black;
-  margin-left: 0.5rem;
-  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+`;
+
+export const LocationButton = styled.button`
+  background: none;
+  border: none;
+
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const LocationIcon = styled(BiNavigation)`
+  color: white;
+  font-size: 1.2rem;
 `;

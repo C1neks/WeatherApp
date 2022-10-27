@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { GiHamburgerMenu } from "react-icons/gi";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import { RiCelsiusLine } from "react-icons/ri";
 import { WiDaySunny, WiCloud, WiRain } from "react-icons/wi";
 
@@ -148,6 +148,9 @@ const Weather: React.FC = () => {
     })();
   }, [deviceLocation]);
 
+  const onClose = () => {
+    setIsOpen(false);
+  };
   const getWeatherForecast = async () => {
     setIsOpen(false);
     if (deviceLocation !== "") {
@@ -279,68 +282,24 @@ const Weather: React.FC = () => {
             )
           }
         >
-          {/*{deviceLocation === "" ? (*/}
-          {/*  <MainPageWrapper>*/}
-          {/*    <AppDesc>*/}
-          {/*      <>*/}
-          {/*        <ModalWrapper>*/}
-          {/*          <OpenModalButton onClick={() => setIsOpen(true)}>*/}
-          {/*            <Loop />*/}
-          {/*          </OpenModalButton>*/}
-
-          {/*          <Modal*/}
-          {/*            formValues={formValues}*/}
-          {/*            deviceLocation={deviceLocation}*/}
-          {/*            handleInputChange={handleInputChange}*/}
-          {/*            open={isOpen}*/}
-          {/*            onClose={() => setIsOpen(false)}*/}
-          {/*            getWeatherForecast={getWeatherForecast}*/}
-          {/*            getDeviceLocation={getDeviceLocation}*/}
-          {/*          />*/}
-          {/*        </ModalWrapper>*/}
-          {/*      </>*/}
-          {/*    </AppDesc>*/}
-          {/*  </MainPageWrapper>*/}
-          {/*) : (*/}
-          {/*  <MainPageWrapper>*/}
-          {/*    <AppDesc>*/}
-          {/*      <>*/}
-          {/*        <ModalWrapper>*/}
-          {/*          <OpenModalButton onClick={() => setIsOpen(true)}>*/}
-          {/*            <Loop />*/}
-          {/*          </OpenModalButton>*/}
-
-          {/*          <Modal*/}
-          {/*            formValues={formValues}*/}
-          {/*            deviceLocation={deviceLocation}*/}
-          {/*            handleInputChange={handleInputChange}*/}
-          {/*            open={isOpen}*/}
-          {/*            onClose={() => setIsOpen(false)}*/}
-          {/*            getWeatherForecast={getWeatherForecast}*/}
-          {/*            getDeviceLocation={getDeviceLocation}*/}
-          {/*          />*/}
-          {/*        </ModalWrapper>*/}
-          {/*      </>*/}
-          {/*    </AppDesc>*/}
-          {/*  </MainPageWrapper>*/}
-          {/*)}*/}
-
           <TopInfo background={background.icon}>
             {deviceLocation === "" ? (
               <MainPageWrapper>
                 <AppDesc>
                   <>
                     <ModalWrapper>
-                      <OpenModalButton onClick={() => setIsOpen(true)}>
-                        <Loop />
-                      </OpenModalButton>
+                      {!isOpen ? (
+                        <OpenModalButton onClick={() => setIsOpen(true)}>
+                          <Loop />
+                        </OpenModalButton>
+                      ) : null}
 
                       <Modal
                         formValues={formValues}
                         deviceLocation={deviceLocation}
                         handleInputChange={handleInputChange}
                         open={isOpen}
-                        onClose={() => setIsOpen(false)}
+                        onClose={onClose}
                         getWeatherForecast={getWeatherForecast}
                         getDeviceLocation={getDeviceLocation}
                       />
@@ -353,16 +312,18 @@ const Weather: React.FC = () => {
                 <AppDesc>
                   <>
                     <ModalWrapper>
-                      <OpenModalButton onClick={() => setIsOpen(true)}>
-                        <Loop />
-                      </OpenModalButton>
+                      {!isOpen ? (
+                        <OpenModalButton onClick={() => setIsOpen(true)}>
+                          <Loop />
+                        </OpenModalButton>
+                      ) : null}
 
                       <Modal
                         formValues={formValues}
                         deviceLocation={deviceLocation}
                         handleInputChange={handleInputChange}
                         open={isOpen}
-                        onClose={() => setIsOpen(false)}
+                        onClose={onClose}
                         getWeatherForecast={getWeatherForecast}
                         getDeviceLocation={getDeviceLocation}
                       />
@@ -375,7 +336,7 @@ const Weather: React.FC = () => {
             <RiCelsiusLine />
           </TopInfo>
 
-          <MainInfo onClick={() => setIsOpen(false)}>
+          <MainInfo>
             <WeatherInfo>
               <ForecastLocation>
                 {forecast.resolvedAddress === "" ? (
