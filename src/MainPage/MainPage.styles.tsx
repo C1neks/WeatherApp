@@ -38,6 +38,11 @@ export const Input = styled.input`
 
   outline: none;
   cursor: pointer;
+  max-width: 6.5rem;
+  @media only screen and (min-width: 1024px) {
+    max-width: 15rem;
+    padding: 8px 15px;
+  }
 `;
 
 export const InputButton = styled.div`

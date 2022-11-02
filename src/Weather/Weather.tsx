@@ -60,11 +60,26 @@ import Modal from "../Modal";
 const initialFormState = {
   location: "",
 };
+
+const initialBackgroundState = {
+  conditions: "",
+  datetimeEpoch: 0,
+  feelslike: 0,
+  hours: [],
+  humidity: 0,
+  precipprob: 0,
+  pressure: 0,
+  sunrise: "",
+  sunset: "",
+  temp: 0,
+  tempmax: 0,
+  tempmin: 0,
+  windspeed: 0,
+  icon: "",
+};
 const Weather: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const param = searchParams.get("name");
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
@@ -96,24 +111,10 @@ const Weather: React.FC = () => {
     resolvedAddress: "",
     days: [],
   });
-  const [background, setBackground] = useState<DayType>({
-    conditions: "",
-    datetimeEpoch: 0,
-    feelslike: 0,
-    hours: [],
-    humidity: 0,
-    precipprob: 0,
-    pressure: 0,
-    sunrise: "",
-    sunset: "",
-    temp: 0,
-    tempmax: 0,
-    tempmin: 0,
-    windspeed: 0,
-    icon: "",
-  });
+  const [background, setBackground] = useState<DayType>(initialBackgroundState);
 
   const getDeviceLocation = async () => {
+    const param = searchParams.get("name");
     if (param) {
       setDeviceLocation(param);
     } else {
@@ -143,8 +144,9 @@ const Weather: React.FC = () => {
   useEffect(() => {
     (async () => {
       await getWeatherForecast();
-
-      navigate({ pathname: "/city", search: `?name=${deviceLocation}` });
+      if (deviceLocation !== "") {
+        navigate({ pathname: "/city", search: `?name=${deviceLocation}` });
+      }
     })();
   }, [deviceLocation]);
 
@@ -165,14 +167,15 @@ const Weather: React.FC = () => {
       setForecast(res);
       setBackground(res.days[0]);
     } else {
-      navigate({ pathname: "/city", search: `?name=${formValues.location}` });
-      const result = await fetch(
-        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${formValues.location}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
-      );
-      const res = await result.json();
-      setForecast(res);
-      setBackground(res.days[0]);
-      // setIsOpen(false);
+      if (formValues.location !== "") {
+        navigate({ pathname: "/city", search: `?name=${formValues.location}` });
+        const result = await fetch(
+          `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${formValues.location}?unitGroup=metric&include=days%2Chours&key=${process.env.REACT_APP_API_KEY}&contentType=json`
+        );
+        const res = await result.json();
+        setForecast(res);
+        setBackground(res.days[0]);
+      }
     }
   };
 
@@ -196,7 +199,7 @@ const Weather: React.FC = () => {
 
   const weekForecast = forecast.days.map((day: DayType, i: number) =>
     i > 0 && i <= 6 ? (
-      <LaterForecast>
+      <LaterForecast key={day.datetimeEpoch}>
         <WeekDayWrapper>{getWeekDay(day.datetimeEpoch)}</WeekDayWrapper>
         <IconContext.Provider
           value={{
@@ -232,7 +235,7 @@ const Weather: React.FC = () => {
 
   const forecastDetails = forecast.days.map((day: DayType, i: number) =>
     i === 0 ? (
-      <MoreDetails day={day.icon}>
+      <MoreDetails key={day.datetimeEpoch} day={day.icon}>
         <Details>
           <DetailName>Sunrise</DetailName>{" "}
           <DetailValue>{day.sunrise.slice(0, 5)}</DetailValue>
@@ -283,56 +286,29 @@ const Weather: React.FC = () => {
           }
         >
           <TopInfo background={background.icon}>
-            {deviceLocation === "" ? (
-              <MainPageWrapper>
-                <AppDesc>
-                  <>
-                    <ModalWrapper>
-                      {!isOpen ? (
-                        <OpenModalButton onClick={() => setIsOpen(true)}>
-                          <Loop />
-                        </OpenModalButton>
-                      ) : null}
+            <MainPageWrapper>
+              <AppDesc>
+                <ModalWrapper>
+                  {!isOpen ? (
+                    <OpenModalButton onClick={() => setIsOpen(true)}>
+                      <Loop />
+                    </OpenModalButton>
+                  ) : null}
 
-                      <Modal
-                        formValues={formValues}
-                        deviceLocation={deviceLocation}
-                        handleInputChange={handleInputChange}
-                        open={isOpen}
-                        onClose={onClose}
-                        getWeatherForecast={getWeatherForecast}
-                        getDeviceLocation={getDeviceLocation}
-                      />
-                    </ModalWrapper>
-                  </>
-                </AppDesc>
-              </MainPageWrapper>
-            ) : (
-              <MainPageWrapper>
-                <AppDesc>
-                  <>
-                    <ModalWrapper>
-                      {!isOpen ? (
-                        <OpenModalButton onClick={() => setIsOpen(true)}>
-                          <Loop />
-                        </OpenModalButton>
-                      ) : null}
+                  <Modal
+                    formValues={formValues}
+                    deviceLocation={deviceLocation}
+                    handleInputChange={handleInputChange}
+                    open={isOpen}
+                    onClose={onClose}
+                    getWeatherForecast={getWeatherForecast}
+                    getDeviceLocation={getDeviceLocation}
+                  />
+                </ModalWrapper>
+              </AppDesc>
+            </MainPageWrapper>
 
-                      <Modal
-                        formValues={formValues}
-                        deviceLocation={deviceLocation}
-                        handleInputChange={handleInputChange}
-                        open={isOpen}
-                        onClose={onClose}
-                        getWeatherForecast={getWeatherForecast}
-                        getDeviceLocation={getDeviceLocation}
-                      />
-                    </ModalWrapper>
-                  </>
-                </AppDesc>
-              </MainPageWrapper>
-            )}
-            <div>{today.toDateString()}</div>
+            <div>{today.toDateString().slice(0, -4)}</div>
             <RiCelsiusLine />
           </TopInfo>
 
@@ -382,7 +358,7 @@ const Weather: React.FC = () => {
                       <HourForecastWrapper>
                         {day.hours.map((hour: Hour, i: number) =>
                           hour.datetime >= time ? (
-                            <>
+                            <div key={hour.datetime}>
                               {
                                 <HourForecast>
                                   <StyledHours>
@@ -395,7 +371,7 @@ const Weather: React.FC = () => {
                                   </StyledDegree>
                                 </HourForecast>
                               }
-                            </>
+                            </div>
                           ) : null
                         )}
                       </HourForecastWrapper>
