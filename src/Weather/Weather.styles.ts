@@ -63,7 +63,7 @@ export const TopInfo = styled.div<BackgroundIcon>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  //
   color: white;
   margin: 2rem 2rem 0rem 2rem;
   width: ${(props) => (props.background === "" ? "" : "90%")};
@@ -218,7 +218,7 @@ export const MoreDetails = styled.div<Props>`
     justify-content: center;
   }
 `;
-export const Details = styled.p`
+export const Details = styled.div`
   width: 50%;
   margin: 0;
   @media only screen and (min-width: 1024px) {
@@ -299,7 +299,15 @@ export const ChevronUp = styled(BiChevronUp)`
 `;
 
 export const ModalWrapper = styled.div`
-  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 2rem;
+  left: 0.5rem;
+`;
+
+export const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -346,11 +354,16 @@ export const Form = styled.form`
 export const SubmitButton = styled.button`
   position: absolute;
   top: 0.3rem;
-  right: 0.3rem;
+  right: 0.1rem;
   background: none;
   border: none;
   font-size: 1rem;
   cursor: pointer;
+  @media only screen and (min-width: 1024px) {
+    right: 0.4rem;
+    top: 0.4rem;
+    font-size: 1.2rem;
+  }
 `;
 
 export const LocationButton = styled.button`
@@ -361,6 +374,7 @@ export const LocationButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0px 3px;
 `;
 
 export const LocationIcon = styled(BiNavigation)`

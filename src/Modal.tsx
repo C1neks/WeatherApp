@@ -6,7 +6,7 @@ import {
   Form,
   LocationButton,
   LocationIcon,
-  ModalWrapper,
+  ModalContainer,
   SearchBarLoop,
   SubmitButton,
 } from "./Weather/Weather.styles";
@@ -30,7 +30,7 @@ const Modal = ({
   if (!open) return null;
 
   return (
-    <ModalWrapper>
+    <ModalContainer>
       <InputButtonWrapper>
         <InputButton>
           <Form onSubmit={getWeatherForecast}>
@@ -44,11 +44,11 @@ const Modal = ({
             </SubmitButton>
           </Form>
           <LocationButton onMouseDown={getDeviceLocation}>
-            <LocationIcon></LocationIcon>
+            <LocationIcon />
           </LocationButton>
         </InputButton>
       </InputButtonWrapper>
-    </ModalWrapper>
+    </ModalContainer>
   );
 };
 

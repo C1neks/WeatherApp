@@ -17,7 +17,7 @@ const InputComponent = ({
         autoFocus
         id="location"
         name="location"
-        placeholder="Enter location"
+        placeholder="Search"
         value={formValues.location}
         onChange={handleInputChange}
         onBlur={onClose}
