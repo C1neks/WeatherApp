@@ -10,22 +10,15 @@ import {
   SearchBarLoop,
   SubmitButton,
 } from "./Weather/Weather.styles";
+import { ModalType } from "./models";
 
-const Modal = ({
+const Modal: React.FC<ModalType> = ({
   open,
   onClose,
   formValues,
   handleInputChange,
   getWeatherForecast,
   getDeviceLocation,
-}: {
-  open: boolean;
-  onClose: () => void;
-  formValues: { location: string };
-  deviceLocation: string;
-  handleInputChange: (e: any) => void;
-  getWeatherForecast: () => void;
-  getDeviceLocation: () => void;
 }) => {
   if (!open) return null;
 

@@ -8,7 +8,6 @@ import {
   ActualTemp,
   ChevronDown,
   ChevronUp,
-  Cloud,
   Conditions,
   DetailName,
   Details,
@@ -29,15 +28,11 @@ import {
   MoreDetails,
   OpenModalButton,
   Precip,
-  Rain,
-  Sad,
   StyledDegree,
   StyledHours,
-  Sun,
   TodayForecastDetails,
   TopInfo,
   WeatherForecastIcon,
-  WeatherIcon,
   WeatherIconWrapper,
   WeatherInfo,
   WeekDayWrapper,
@@ -56,27 +51,13 @@ import {
   Spinner,
 } from "../MainPage/MainPage.styles";
 import Modal from "../Modal";
+import weatherIconGenerator from "./weatherIcon";
+import forecastIconGenerator from "./forecastIcon";
 
 const initialFormState = {
   location: "",
 };
 
-const initialBackgroundState = {
-  conditions: "",
-  datetimeEpoch: 0,
-  feelslike: 0,
-  hours: [],
-  humidity: 0,
-  precipprob: 0,
-  pressure: 0,
-  sunrise: "",
-  sunset: "",
-  temp: 0,
-  tempmax: 0,
-  tempmin: 0,
-  windspeed: 0,
-  icon: "",
-};
 const Weather: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -85,15 +66,11 @@ const Weather: React.FC = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [deviceLocation, setDeviceLocation] = useState<string>("");
   const [formValues, setFormValues] = useState(initialFormState);
-
-  const handleInputChange = (e: {
-    target: { name: string; value: string };
-  }) => {
-    setFormValues({
-      ...formValues,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const [forecast, setForecast] = useState<ForecastType>({
+    resolvedAddress: "",
+    days: [],
+  });
+  const [background, setBackground] = useState<string>("");
 
   const timeElapsed = Date.now();
 
@@ -107,11 +84,18 @@ const Weather: React.FC = () => {
     ":" +
     todayDate.getSeconds();
 
-  const [forecast, setForecast] = useState<ForecastType>({
-    resolvedAddress: "",
-    days: [],
-  });
-  const [background, setBackground] = useState<DayType>(initialBackgroundState);
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const handleInputChange = (e: {
+    target: { name: string; value: string };
+  }) => {
+    setFormValues({
+      ...formValues,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const getDeviceLocation = async () => {
     const param = searchParams.get("name");
@@ -150,9 +134,6 @@ const Weather: React.FC = () => {
     })();
   }, [deviceLocation]);
 
-  const onClose = () => {
-    setIsOpen(false);
-  };
   const getWeatherForecast = async () => {
     setIsOpen(false);
     if (deviceLocation !== "") {
@@ -165,7 +146,7 @@ const Weather: React.FC = () => {
       );
       const res = await result.json();
       setForecast(res);
-      setBackground(res.days[0]);
+      setBackground(res.days[0].icon);
     } else {
       if (formValues.location !== "") {
         navigate({ pathname: "/city", search: `?name=${formValues.location}` });
@@ -174,7 +155,7 @@ const Weather: React.FC = () => {
         );
         const res = await result.json();
         setForecast(res);
-        setBackground(res.days[0]);
+        setBackground(res.days[0].icon);
       }
     }
   };
@@ -208,19 +189,7 @@ const Weather: React.FC = () => {
           }}
         >
           <IconPercentWrapper>
-            {day.icon === "rain" ? (
-              <WeatherForecastIcon>
-                <WiRain />
-              </WeatherForecastIcon>
-            ) : day.icon === "partly-cloudy-day" ? (
-              <WeatherForecastIcon>
-                <WiCloud />
-              </WeatherForecastIcon>
-            ) : (
-              <WeatherForecastIcon>
-                <WiDaySunny />
-              </WeatherForecastIcon>
-            )}
+            {forecastIconGenerator(day.icon)}
             <Precip>{day.precipprob.toFixed(0) + "%"}</Precip>
           </IconPercentWrapper>
 
@@ -264,6 +233,60 @@ const Weather: React.FC = () => {
     ) : null
   );
 
+  const todayForecastDetails = forecast.days.map((day: DayType, i: number) => (
+    <div key={day.datetimeEpoch}>
+      {i === 0 ? (
+        <div>
+          <TodayForecastDetails>
+            <IconContext.Provider value={{ color: "white", size: "80" }}>
+              <ActualTemp>
+                {day.temp.toFixed(0)}
+                <span>&#176;</span>
+              </ActualTemp>
+            </IconContext.Provider>
+            <HighestAndLowest>
+              <span>
+                <ChevronUp /> {day.tempmax.toFixed(0)}
+                <span>&#176;</span>
+              </span>
+              <span>
+                <ChevronDown />
+                {day.tempmin.toFixed(0)}
+                <span>&#176;</span>
+              </span>
+            </HighestAndLowest>
+
+            <Conditions>{day.conditions}</Conditions>
+            <FeelsLike>
+              Feels like {day.feelslike.toFixed(0)} <span>&#176;</span>
+            </FeelsLike>
+          </TodayForecastDetails>
+
+          <HourForecastWrapper>
+            {day.hours.map((hour: Hour, i: number) =>
+              hour.datetime >= time ? (
+                <div key={hour.datetime}>
+                  {
+                    <HourForecast>
+                      <StyledHours>
+                        {hour.datetime.slice(0, 2)}
+                        <span>pm</span>
+                      </StyledHours>
+                      <StyledDegree>
+                        {hour.temp.toFixed(0)}
+                        <span>&#176;</span>
+                      </StyledDegree>
+                    </HourForecast>
+                  }
+                </div>
+              ) : null
+            )}
+          </HourForecastWrapper>
+        </div>
+      ) : null}
+    </div>
+  ));
+
   return (
     <div>
       {loading ? (
@@ -272,20 +295,20 @@ const Weather: React.FC = () => {
         </LoaderContainer>
       ) : (
         <ConditionalWrapper
-          condition={background.icon}
+          condition={background}
           wrapper={(children) =>
-            background.icon.includes("rain") ? (
+            background.includes("rain") ? (
               <WrapperRain>{children}</WrapperRain>
-            ) : background.icon.includes("sun") ? (
-              <Wrapper>{children}</Wrapper>
-            ) : background.icon.includes("cloud") ? (
+            ) : background.includes("sun") ? (
+              <Wrapper background={background}>{children}</Wrapper>
+            ) : background.includes("cloud") ? (
               <WrapperCloud>{children}</WrapperCloud>
             ) : (
-              <Wrapper>{children}</Wrapper>
+              <Wrapper background={background}>{children}</Wrapper>
             )
           }
         >
-          <TopInfo background={background.icon}>
+          <TopInfo background={background}>
             <MainPageWrapper>
               <AppDesc>
                 <ModalWrapper>
@@ -323,62 +346,7 @@ const Weather: React.FC = () => {
                 ) : null}
                 {forecast.resolvedAddress}
               </ForecastLocation>
-              {forecast.days.map((day: DayType, i: number) => (
-                <div key={day.datetimeEpoch}>
-                  {i === 0 ? (
-                    <div>
-                      <TodayForecastDetails>
-                        <IconContext.Provider
-                          value={{ color: "white", size: "80" }}
-                        >
-                          <ActualTemp>
-                            {day.temp.toFixed(0)}
-                            <span>&#176;</span>
-                          </ActualTemp>
-                        </IconContext.Provider>
-                        <HighestAndLowest>
-                          <span>
-                            <ChevronUp /> {day.tempmax.toFixed(0)}
-                            <span>&#176;</span>
-                          </span>
-                          <span>
-                            <ChevronDown />
-                            {day.tempmin.toFixed(0)}
-                            <span>&#176;</span>
-                          </span>
-                        </HighestAndLowest>
-
-                        <Conditions>{day.conditions}</Conditions>
-                        <FeelsLike>
-                          Feels like {day.feelslike.toFixed(0)}{" "}
-                          <span>&#176;</span>
-                        </FeelsLike>
-                      </TodayForecastDetails>
-
-                      <HourForecastWrapper>
-                        {day.hours.map((hour: Hour, i: number) =>
-                          hour.datetime >= time ? (
-                            <div key={hour.datetime}>
-                              {
-                                <HourForecast>
-                                  <StyledHours>
-                                    {hour.datetime.slice(0, 2)}
-                                    <span>pm</span>
-                                  </StyledHours>
-                                  <StyledDegree>
-                                    {hour.temp.toFixed(0)}
-                                    <span>&#176;</span>
-                                  </StyledDegree>
-                                </HourForecast>
-                              }
-                            </div>
-                          ) : null
-                        )}
-                      </HourForecastWrapper>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+              {todayForecastDetails}
               <WeekForecastWrapper>
                 {weekForecast}
                 {forecastDetails}
@@ -391,19 +359,7 @@ const Weather: React.FC = () => {
               }}
             >
               <WeatherIconWrapper>
-                <WeatherIcon background={background.icon}>
-                  {background.icon.includes("rain") ? (
-                    <Rain />
-                  ) : background.icon.includes("sun") ? (
-                    <Sun />
-                  ) : background.icon.includes("cloud") ? (
-                    <Cloud />
-                  ) : background.icon.includes("clear") ? (
-                    <Sun />
-                  ) : (
-                    <Sad />
-                  )}
-                </WeatherIcon>
+                {weatherIconGenerator(background)}
               </WeatherIconWrapper>
             </IconContext.Provider>
           </MainInfo>

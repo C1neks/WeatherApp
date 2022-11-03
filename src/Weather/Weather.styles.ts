@@ -14,13 +14,14 @@ type BackgroundIcon = {
   background: string;
 };
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<BackgroundIcon>`
   background: rgb(236, 177, 35);
   background: linear-gradient(
     180deg,
     rgba(236, 177, 35, 1) 30%,
     rgba(236, 121, 4, 1) 100%
   );
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -63,7 +64,7 @@ export const TopInfo = styled.div<BackgroundIcon>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  //
+
   color: white;
   margin: 2rem 2rem 0rem 2rem;
   width: ${(props) => (props.background === "" ? "" : "90%")};
