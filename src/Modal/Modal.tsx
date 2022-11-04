@@ -1,7 +1,7 @@
 import React from "react";
-import { InputButton, InputButtonWrapper } from "./MainPage/MainPage.styles";
+import { InputButton, InputButtonWrapper } from "../MainPage/MainPage.styles";
 
-import InputComponent from "./InputComponent";
+import InputComponent from "../InputComponent";
 import {
   Form,
   LocationButton,
@@ -9,8 +9,8 @@ import {
   ModalContainer,
   SearchBarLoop,
   SubmitButton,
-} from "./Weather/Weather.styles";
-import { ModalType } from "./models";
+} from "../Weather/Weather.styles";
+import { ModalType } from "../models";
 
 const Modal: React.FC<ModalType> = ({
   open,

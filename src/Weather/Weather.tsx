@@ -32,7 +32,6 @@ import {
   StyledHours,
   TodayForecastDetails,
   TopInfo,
-  WeatherForecastIcon,
   WeatherIconWrapper,
   WeatherInfo,
   WeekDayWrapper,
@@ -50,7 +49,7 @@ import {
   MainPageWrapper,
   Spinner,
 } from "../MainPage/MainPage.styles";
-import Modal from "../Modal";
+import Modal from "../Modal/Modal";
 import weatherIconGenerator from "./weatherIcon";
 import forecastIconGenerator from "./forecastIcon";
 
@@ -331,7 +330,7 @@ const Weather: React.FC = () => {
               </AppDesc>
             </MainPageWrapper>
 
-            <div>{today.toDateString().slice(0, -4)}</div>
+            <div data-testid="date">{today.toDateString().slice(0, -4)}</div>
             <RiCelsiusLine />
           </TopInfo>
 
