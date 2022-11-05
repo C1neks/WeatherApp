@@ -1,7 +1,7 @@
 import React from "react";
-import { InputButton, InputButtonWrapper } from "./MainPage/MainPage.styles";
+import { InputButton, InputButtonWrapper } from "../MainPage/MainPage.styles";
 
-import InputComponent from "./InputComponent";
+import InputComponent from "../InputComponent";
 import {
   Form,
   LocationButton,
@@ -9,23 +9,16 @@ import {
   ModalContainer,
   SearchBarLoop,
   SubmitButton,
-} from "./Weather/Weather.styles";
+} from "../Weather/Weather.styles";
+import { ModalType } from "../models";
 
-const Modal = ({
+const Modal: React.FC<ModalType> = ({
   open,
   onClose,
   formValues,
   handleInputChange,
   getWeatherForecast,
   getDeviceLocation,
-}: {
-  open: boolean;
-  onClose: () => void;
-  formValues: { location: string };
-  deviceLocation: string;
-  handleInputChange: (e: any) => void;
-  getWeatherForecast: () => void;
-  getDeviceLocation: () => void;
 }) => {
   if (!open) return null;
 

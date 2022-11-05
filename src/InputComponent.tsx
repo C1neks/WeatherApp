@@ -1,29 +1,24 @@
 import React from "react";
 import { Input } from "./MainPage/MainPage.styles";
+import { InputType } from "./models";
 
-const InputComponent = ({
+const InputComponent: React.FC<InputType> = ({
   formValues,
   handleInputChange,
   onClose,
-}: {
-  formValues: { location: string };
-  handleInputChange: (e: any) => void;
-  onClose: () => void;
 }) => {
   return (
-    <div>
-      <Input
-        type="search"
-        autoFocus
-        id="location"
-        name="location"
-        placeholder="Search"
-        value={formValues.location}
-        onChange={handleInputChange}
-        onBlur={onClose}
-        required
-      />
-    </div>
+    <Input
+      type="search"
+      autoFocus
+      id="location"
+      name="location"
+      placeholder="Search"
+      value={formValues.location}
+      onChange={handleInputChange}
+      onBlur={onClose}
+      required
+    />
   );
 };
 
