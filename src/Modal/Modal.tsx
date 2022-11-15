@@ -11,32 +11,39 @@ import {
   SubmitButton,
 } from "../Weather/Weather.styles";
 import { ModalType } from "../models";
+import { useNavigate } from "react-router-dom";
 
 const Modal: React.FC<ModalType> = ({
   open,
   onClose,
   formValues,
   handleInputChange,
-  getWeatherForecast,
-  getDeviceLocation,
 }) => {
+  const navigate = useNavigate();
   if (!open) return null;
+
+  const setCityParam = (e: any) => {
+    e.preventDefault();
+    console.log(formValues.location);
+    navigate({ pathname: "/city", search: `?name=${formValues.location}` });
+  };
 
   return (
     <ModalContainer>
       <InputButtonWrapper>
         <InputButton>
-          <Form onSubmit={getWeatherForecast}>
+          <Form onSubmit={setCityParam}>
             <InputComponent
+              open={open}
               formValues={formValues}
               handleInputChange={handleInputChange}
               onClose={onClose}
             />
-            <SubmitButton type="submit" onMouseDown={getWeatherForecast}>
+            <SubmitButton type="submit">
               <SearchBarLoop />
             </SubmitButton>
           </Form>
-          <LocationButton onMouseDown={getDeviceLocation}>
+          <LocationButton onMouseDown={() => navigate({ pathname: "/city" })}>
             <LocationIcon />
           </LocationButton>
         </InputButton>

@@ -26,6 +26,7 @@ export interface Hour {
 }
 
 export interface InputType {
+  open: boolean
   onClose: () => void;
   formValues: { location: string };
   handleInputChange: (e: any) => void;
@@ -33,7 +34,4 @@ export interface InputType {
 
 export interface ModalType extends InputType {
   open: boolean;
-  deviceLocation: string;
-  getWeatherForecast: () => void;
-  getDeviceLocation: () => void;
 }
