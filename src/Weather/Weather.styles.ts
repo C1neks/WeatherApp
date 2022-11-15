@@ -14,7 +14,18 @@ type BackgroundIcon = {
   background: string;
 };
 
-export const Wrapper = styled.div<BackgroundIcon>`
+export const WrapperDefault = styled.div<BackgroundIcon>`
+  background: black;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+`;
+
+export const WrapperSun = styled.div<BackgroundIcon>`
   background: rgb(236, 177, 35);
   background: linear-gradient(
     180deg,
